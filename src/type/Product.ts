@@ -1,0 +1,23 @@
+export type ProductType = {
+  id?: number,
+  name: String,
+  type: string,
+  brand: String,
+  description: string,
+  battery: string,
+  cpu: string,
+  created_at: string,
+  updated_at: string,
+  operating_system: string,
+  ram: string,
+  screen_reslution: string,
+  screen_size: string,
+  status: string,
+  storage: string,
+  thumbnail: string,
+  image: string,
+  weight: string,
+  price: number,
+  sale_price: number,
+  quantity: number
+}
