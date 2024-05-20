@@ -23,11 +23,13 @@ const optionsByCategory: any = {
 const AddPro: React.FC = () => {
   const navigate = useNavigate()
   const [fileList, setfileList] = useState<UploadFile[] | any>([])
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [brands, setBrands] = useState([])
   const [form] = Form.useForm()
 
   const handleCategoryChange = (value: string) => {
     setBrands(optionsByCategory[value] || [])
+    setSelectedCategory(value)
     form.setFieldsValue({ brand: undefined })
   }
 
@@ -76,6 +78,27 @@ const AddPro: React.FC = () => {
     const imgWindow = window.open(src)
     imgWindow?.document.write(image.outerHTML)
   }
+  const [combinedValue, setCombinedValue] = useState<string>('')
+  const [batteryValue, setBatteryValue] = useState<number | undefined>(undefined)
+  const [unit, setUnit] = useState<string>('mah') // Đơn vị mặc định
+  const handleInputChange = (value: number | undefined) => {
+    const newValue = value !== undefined ? `${value}${unit}` : '' 
+    setCombinedValue(newValue)
+  }
+
+  const handleSelectChange = (value: string) => {
+    setUnit(value)
+    const newValue = batteryValue !== undefined ? `${batteryValue}${value}` : '' 
+    setCombinedValue(newValue)
+  }
+
+  console.log(combinedValue)
+
+  const onFormValuesChange = (changedValues: any, allValues: any) => {
+    console.log('Changed values:', changedValues)
+    console.log('All values:', allValues)
+    // Do something with the changed or all values
+  }
 
   return (
     <div className='mt-[20px]'>
@@ -85,7 +108,8 @@ const AddPro: React.FC = () => {
         </Typography.Title>
       </Breadcrumb>
 
-      <Form initialValues={{}} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete='on'>
+      {/* <Form initialValues={{}} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete='on'> */}
+      <Form initialValues={{}} onValuesChange={onFormValuesChange} onFinishFailed={onFinishFailed} autoComplete='on'>
         <Row gutter={16}>
           <Col span={10}>
             <Form.Item name='image' labelCol={{ span: 24 }} label='Hình ảnh thumbal'>
@@ -234,58 +258,91 @@ const AddPro: React.FC = () => {
                 </Form.Item>
               </Col>
 
+              {['dienthoai', 'laptop', 'tablet'].includes(selectedCategory) && (
+                <>
+                  <Col span={12}>
+                    <Form.Item
+                      label='Bộ nhớ lưu trữ thiết bị'
+                      name='storage'
+                      labelCol={{ span: 24 }}
+                      rules={[{ required: true, message: 'Bộ nhớ lưu trữ không để trống!' }]}
+                    >
+                      <Select
+                        style={{ width: '100%' }}
+                        size='large'
+                        placeholder='Lựa chọn'
+                        allowClear
+                        showSearch
+                        optionFilterProp='children'
+                      >
+                        <Select.Option value='16GB'>16GB</Select.Option>
+                        <Select.Option value='32GB'>32GB</Select.Option>
+                        <Select.Option value='128GB'>128GB</Select.Option>
+                        <Select.Option value='256GB'>256GB</Select.Option>
+                        <Select.Option value='512GB'>512GB</Select.Option>
+                        <Select.Option value='1TB'>1TB</Select.Option>
+                        <Select.Option value='2TB'>2TB</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      label='Ram thiết bị'
+                      name='ram'
+                      labelCol={{ span: 24 }}
+                      rules={[{ required: true, message: 'Ram thiết bị không để trống!' }]}
+                    >
+                      <Select
+                        style={{ width: '100%' }}
+                        size='large'
+                        placeholder='Lựa chọn'
+                        allowClear
+                        showSearch
+                        optionFilterProp='children'
+                      >
+                        <Select.Option value='4GB'>4GB</Select.Option>
+                        <Select.Option value='6GB'>6GB</Select.Option>
+                        <Select.Option value='8GB'>8GB</Select.Option>
+                        <Select.Option value='12GB'>12GB</Select.Option>
+                        <Select.Option value='16GB'>16GB</Select.Option>
+                        <Select.Option value='24GB'>24GB</Select.Option>
+                        <Select.Option value='32GB'>32GB</Select.Option>
+                        <Select.Option value='64GB'>64GB</Select.Option>
+                        <Select.Option value='128GB'>128GB</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                </>
+              )}
               <Col span={12}>
                 <Form.Item
-                  label='Bộ nhớ lưu trữ thiết bị'
-                  name='storage'
+                  label='Dung lượng pin sản phẩm'
+                  name='battery'
                   labelCol={{ span: 24 }}
-                  rules={[{ required: true, message: 'Bộ nhớ lưu trữ không để trống!' }]}
+                  rules={[{ required: true, message: 'Dung lượng pin thiết bị không để trống!' }]}
                 >
-                  <Select
-                    style={{ width: '100%' }}
-                    size='large'
-                    placeholder='Lựa chọn'
-                    allowClear
-                    showSearch
-                    optionFilterProp='children'
-                  >
-                    <Select.Option value='16GB'>16GB</Select.Option>
-                    <Select.Option value='32GB'>32GB</Select.Option>
-                    <Select.Option value='128GB'>128GB</Select.Option>
-                    <Select.Option value='256GB'>256GB</Select.Option>
-                    <Select.Option value='512GB'>512GB</Select.Option>
-                    <Select.Option value='1TB'>1TB</Select.Option>
-                    <Select.Option value='2TB'>2TB</Select.Option>
-                  </Select>
+                  <div style={{ position: 'relative', width: '100%' }}>
+                    <InputNumber style={{ width: '70%' }} size='large' onChange={handleInputChange} />
+                    <Select
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        width: '30%',
+                        height: '100%'
+                      }}
+                      size='large'
+                      defaultValue='mah'
+                      onChange={handleSelectChange}
+                    >
+                      <Select.Option value='mah'>mah</Select.Option>
+                      <Select.Option value='kwh'>kwh</Select.Option>
+                      <Select.Option value='cell'>cell</Select.Option>
+                    </Select>
+                  </div>
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item
-                  label='Ram thiết bị'
-                  name='ram'
-                  labelCol={{ span: 24 }}
-                  rules={[{ required: true, message: 'Ram thiết bị không để trống!' }]}
-                >
-                  <Select
-                    style={{ width: '100%' }}
-                    size='large'
-                    placeholder='Lựa chọn'
-                    allowClear
-                    showSearch
-                    optionFilterProp='children'
-                  >
-                    <Select.Option value='4GB'>4GB</Select.Option>
-                    <Select.Option value='6GB'>6GB</Select.Option>
-                    <Select.Option value='8GB'>8GB</Select.Option>
-                    <Select.Option value='12GB'>12GB</Select.Option>
-                    <Select.Option value='16GB'>16GB</Select.Option>
-                    <Select.Option value='24GB'>24GB</Select.Option>
-                    <Select.Option value='32GB'>32GB</Select.Option>
-                    <Select.Option value='64GB'>64GB</Select.Option>
-                    <Select.Option value='128GB'>128GB</Select.Option>
-                  </Select>
-                </Form.Item>
-              </Col>
+
               <Col span={12}>
                 <Form.Item
                   name='quantity'

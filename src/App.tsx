@@ -45,18 +45,12 @@ function App() {
         <Route
           path='/admin'
           element={
-            <PrivateRouter>
-              <AdminLayout />
-            </PrivateRouter>
+            // <PrivateRouter>
+            <AdminLayout />
+            // </PrivateRouter>
           }
         >
           <Route index element={<Dashboard />} />
-          {/* Phần danh mục */}
-          <Route path='categories'>
-            <Route index element={<ListCate />} />
-            <Route path='add' element={<AddCate />} />
-            <Route path=':id/edit' element={<EditCate />} />
-          </Route>
           {/* phần sản phẩm */}
           <Route path='products'>
             <Route index element={<ListPro />} />
@@ -68,8 +62,8 @@ function App() {
             <Route index element={<ListUser />} />
             <Route path='add' element={<AddUser />} />
             <Route path=':id/edit' element={<EditUSer />} />
-          </Route> 
-        </Route>  
+          </Route>
+        </Route>
       </Routes>
     </>
   )
