@@ -78,26 +78,42 @@ const AddPro: React.FC = () => {
     const imgWindow = window.open(src)
     imgWindow?.document.write(image.outerHTML)
   }
-  const [combinedValue, setCombinedValue] = useState<string>('')
-  const [batteryValue, setBatteryValue] = useState<number | undefined>(undefined)
+  // phần battery
+  const [battery, setBattery] = useState<string>('')
+  const [batteryValue, setBatteryValue] = useState<number | null>(null)
   const [unit, setUnit] = useState<string>('mah') // Đơn vị mặc định
-  const handleInputChange = (value: number | undefined) => {
-    const newValue = value !== undefined ? `${value}${unit}` : '' 
-    setCombinedValue(newValue)
+  const handleInputBattery = (value: number | null) => {
+    const newValue = value !== undefined ? `${value}${unit}` : ''
+    setBattery(newValue)
   }
 
-  const handleSelectChange = (value: string) => {
+  const handleSelectBattery = (value: string) => {
     setUnit(value)
-    const newValue = batteryValue !== undefined ? `${batteryValue}${value}` : '' 
-    setCombinedValue(newValue)
+    const newValue = batteryValue !== undefined ? `${batteryValue}${value}` : ''
+    setBattery(newValue)
   }
 
-  console.log(combinedValue)
+  const [screenSize, setScreenSize] = useState<string>('')
+  const [screenSizeValue, setScreenSizeValue] = useState<number | null>(null)
+  const [size, setSize] = useState<string>('inches') 
+  const handleInputScreenSize = (value: number | null) => {
+    const newValue = value !== undefined ? `${value}${size}` : ''
+    setScreenSize(newValue)
+  }
+
+  const handleSelectScreenSize = (value: string) => {
+    setSize(value)
+    const newValue = screenSizeValue !== undefined ? `${screenSizeValue}${value}` : ''
+    setScreenSize(newValue)
+  }
+
+  console.log(battery)
+  console.log(screenSize)
 
   const onFormValuesChange = (changedValues: any, allValues: any) => {
     console.log('Changed values:', changedValues)
     console.log('All values:', allValues)
-    // Do something with the changed or all values
+
   }
 
   return (
@@ -311,9 +327,20 @@ const AddPro: React.FC = () => {
                         <Select.Option value='128GB'>128GB</Select.Option>
                       </Select>
                     </Form.Item>
+                  </Col>{' '}
+                  <Col span={24}>
+                    <Form.Item
+                      label='Chipset'
+                      name='brand'
+                      labelCol={{ span: 24 }}
+                      rules={[{ required: true, message: 'Chipset sản phẩm không để trống!' }]}
+                    >
+                      <Input style={{ width: '100%' }} size='large' />
+                    </Form.Item>
                   </Col>
                 </>
               )}
+
               <Col span={12}>
                 <Form.Item
                   label='Dung lượng pin sản phẩm'
@@ -322,7 +349,7 @@ const AddPro: React.FC = () => {
                   rules={[{ required: true, message: 'Dung lượng pin thiết bị không để trống!' }]}
                 >
                   <div style={{ position: 'relative', width: '100%' }}>
-                    <InputNumber style={{ width: '70%' }} size='large' onChange={handleInputChange} />
+                    <InputNumber style={{ width: '70%' }} size='large' onChange={handleInputBattery} />
                     <Select
                       style={{
                         position: 'absolute',
@@ -333,11 +360,87 @@ const AddPro: React.FC = () => {
                       }}
                       size='large'
                       defaultValue='mah'
-                      onChange={handleSelectChange}
+                      onChange={handleSelectBattery}
                     >
                       <Select.Option value='mah'>mah</Select.Option>
                       <Select.Option value='kwh'>kwh</Select.Option>
                       <Select.Option value='cell'>cell</Select.Option>
+                    </Select>
+                  </div>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label='Hệ điều hành'
+                  name='operating_system'
+                  labelCol={{ span: 24 }}
+                  rules={[{ required: true, message: 'Hệ điều hành không để trống!' }]}
+                >
+                  <Select
+                    style={{ width: '100%' }}
+                    size='large'
+                    placeholder='Lựa chọn'
+                    allowClear
+                    showSearch
+                    optionFilterProp='children'
+                  >
+                    <Select.Option value='Windows'>Windows</Select.Option>
+                    <Select.Option value='Mac OS'>Mac OS</Select.Option>
+                    <Select.Option value='Linux'>Linux</Select.Option>
+                    <Select.Option value='Android'>Android</Select.Option>
+                    <Select.Option value='iOS'>iOS</Select.Option>
+                    <Select.Option value='Chrome OS'>Chrome OS</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label='Độ phân giải màn hình'
+                  name='screen_reslution'
+                  labelCol={{ span: 24 }}
+                  rules={[{ required: true, message: 'Hệ điều hành không để trống!' }]}
+                >
+                  <Select
+                    style={{ width: '100%' }}
+                    size='large'
+                    placeholder='Lựa chọn'
+                    allowClear
+                    showSearch
+                    optionFilterProp='children'
+                  >
+                    <Select.Option value='HD (1280x720)'>HD (1280x720)</Select.Option>
+                    <Select.Option value='Full HD (1920x1080)'>Full HD (1920x1080)</Select.Option>
+                    <Select.Option value='WUXGA (1920x1200)'>WUXGA (1920x1200)</Select.Option>
+                    <Select.Option value='UWHD (2560x1080)'>UWHD (2560x1080)</Select.Option>
+                    <Select.Option value='2K QHD (2560x1440)'>2K QHD (2560x1440)</Select.Option>
+                    <Select.Option value='WQHD (3440x1440)'>WQHD (3440x1440)</Select.Option>
+                    <Select.Option value='4K (3840x2160)'>4K (3840x2160)</Select.Option>
+                    <Select.Option value='Apple XDR (6016 x 3384)'>Apple XDR (6016 x 3384)</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label='Kích thước màn hình'
+                  name='screen_size'
+                  labelCol={{ span: 24 }}
+                  rules={[{ required: true, message: 'Kích thước màn hình thiết bị không để trống!' }]}
+                >
+                  <div style={{ position: 'relative', width: '100%' }}>
+                    <InputNumber style={{ width: '70%' }} size='large' onChange={handleInputScreenSize} />
+                    <Select
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        width: '30%',
+                        height: '100%'
+                      }}
+                      size='large'
+                      defaultValue='inches'
+                      onChange={handleSelectScreenSize}
+                    >
+                      <Select.Option value='inches'>inches</Select.Option>
                     </Select>
                   </div>
                 </Form.Item>
