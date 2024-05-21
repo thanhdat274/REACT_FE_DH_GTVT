@@ -38,7 +38,7 @@ const AddPro: React.FC = () => {
     const imgLink = await upload(fileList[0])
     const valueAdd = {
       image: imgLink,
-      name: values.name,
+      name: brands,
       price: values.price,
       sale_price: values.sale_price,
       quantity: values.quantity,
@@ -47,6 +47,7 @@ const AddPro: React.FC = () => {
       short_desc: values.short_desc,
       cateId: values.cateId
     }
+    console.log(valueAdd)
     try {
       // const data = await addPro(valueAdd);
       // console.log('data', data);
@@ -95,7 +96,7 @@ const AddPro: React.FC = () => {
 
   const [screenSize, setScreenSize] = useState<string>('')
   const [screenSizeValue, setScreenSizeValue] = useState<number | null>(null)
-  const [size, setSize] = useState<string>('inches') 
+  const [size, setSize] = useState<string>('inches')
   const handleInputScreenSize = (value: number | null) => {
     const newValue = value !== undefined ? `${value}${size}` : ''
     setScreenSize(newValue)
@@ -113,7 +114,6 @@ const AddPro: React.FC = () => {
   const onFormValuesChange = (changedValues: any, allValues: any) => {
     console.log('Changed values:', changedValues)
     console.log('All values:', allValues)
-
   }
 
   return (
@@ -152,7 +152,7 @@ const AddPro: React.FC = () => {
                 </div>
               </UploadWrapper>
             </Form.Item>
-            <Form.Item name='image' labelCol={{ span: 24 }} label='Hình ảnh sản phẩm chi tiết'>
+            {/* <Form.Item name='image' labelCol={{ span: 24 }} label='Hình ảnh sản phẩm chi tiết'>
               <UploadWrapper>
                 <div style={{ textAlign: 'left', border: '0' }}>
                   <Dragger
@@ -175,7 +175,7 @@ const AddPro: React.FC = () => {
                   </Dragger>
                 </div>
               </UploadWrapper>
-            </Form.Item>
+            </Form.Item> */}
           </Col>
 
           <Col span={14}>
@@ -454,6 +454,16 @@ const AddPro: React.FC = () => {
                   rules={[{ required: true, message: 'Số lượng sản phẩm không để trống!' }]}
                 >
                   <InputNumber style={{ width: '100%' }} size='large' />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name='cannang'
+                  label='Trọng lượng'
+                  labelCol={{ span: 24 }}
+                  rules={[{ required: true, message: 'Trọng lượng sản phẩm không để trống!' }]}
+                >
+                  <Input style={{ width: '100%' }} size='large' />
                 </Form.Item>
               </Col>
             </Row>
