@@ -8,11 +8,14 @@ import Dragger from 'antd/es/upload/Dragger'
 import { upload } from '../../../api/images'
 import { addPro } from '../../../api/products'
 import styled from 'styled-components'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import { ProductType } from '@/type/Product'
 
 const { TextArea } = Input
 const { Option } = Select
 const optionsByCategory: any = {
-  dienthoai: ['Apple', 'Samsung', 'Xiaomi', 'oppo', 'realme', 'nokia', 'oneplus', 'asus'],
+  dienthoai: ['Apple', 'Samsung', 'Xiaomi', 'Oppo', 'Realme', 'Nokia', 'Oneplus', 'Asus'],
   laptop: ['Dell', 'HP', 'Lenovo'],
   tablet: ['iPad', 'Samsung', 'Huawei'],
   amthanh: ['Sony', 'JBL', 'Bose'],
@@ -22,47 +25,34 @@ const optionsByCategory: any = {
 }
 const AddPro: React.FC = () => {
   const navigate = useNavigate()
+  const [rawHTML, setRawHTML] = useState('')
   const [fileList, setfileList] = useState<UploadFile[] | any>([])
+  const [mutiFileList, setMutiFileList] = useState<UploadFile[] | any>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [brands, setBrands] = useState([])
   const [form] = Form.useForm()
+  // phần battery
+  const [battery, setBattery] = useState<string>('')
+  const [batteryValue, setBatteryValue] = useState<number | null>(null)
+  const [unit, setUnit] = useState<string>('mah')
+  // phần thông tin màn hình
+  const [screenSize, setScreenSize] = useState<string>('')
+  const [screenSizeValue, setScreenSizeValue] = useState<number | null>(null)
+  const [size, setSize] = useState<string>('inches')
 
+  // phần chọn ngành hàng và select ra thương hiệu
   const handleCategoryChange = (value: string) => {
     setBrands(optionsByCategory[value] || [])
     setSelectedCategory(value)
     form.setFieldsValue({ brand: undefined })
   }
+  //---------------------------------------------------
 
-  const onFinish = async (values: any) => {
-    console.log('Success:', values)
-    const imgLink = await upload(fileList[0])
-    const valueAdd = {
-      image: imgLink,
-      name: brands,
-      price: values.price,
-      sale_price: values.sale_price,
-      quantity: values.quantity,
-      desc_img: values.desc_img,
-      desc: values.desc,
-      short_desc: values.short_desc,
-      cateId: values.cateId
-    }
-    console.log(valueAdd)
-    try {
-      // const data = await addPro(valueAdd);
-      // console.log('data', data);
-
-      message.success('Thêm mới thành công')
-      navigate('/admin/products')
-      // console.log(data);
-    } catch (err) {
-      message.error('Có lỗi xảy ra')
-    }
-  }
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo)
-  }
+  // phầm ảnh sản phẩm
   const handleChangeImage: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    setMutiFileList(newFileList)
+  }
+  const handleChangeThumbnail: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setfileList(newFileList)
   }
   const onPreview = async (file: UploadFile) => {
@@ -79,38 +69,74 @@ const AddPro: React.FC = () => {
     const imgWindow = window.open(src)
     imgWindow?.document.write(image.outerHTML)
   }
-  // phần battery
-  const [battery, setBattery] = useState<string>('')
-  const [batteryValue, setBatteryValue] = useState<number | null>(null)
-  const [unit, setUnit] = useState<string>('mah') // Đơn vị mặc định
+  //---------------------------------------
+
+  // phần chọn dung lượng pin
   const handleInputBattery = (value: number | null) => {
-    const newValue = value !== undefined ? `${value}${unit}` : ''
+    const newValue = value !== undefined ? `${value} ${unit}` : ''
     setBattery(newValue)
   }
-
   const handleSelectBattery = (value: string) => {
     setUnit(value)
-    const newValue = batteryValue !== undefined ? `${batteryValue}${value}` : ''
+    const newValue = batteryValue !== undefined ? `${batteryValue} ${value}` : ''
     setBattery(newValue)
   }
+  //----------------------------------------
 
-  const [screenSize, setScreenSize] = useState<string>('')
-  const [screenSizeValue, setScreenSizeValue] = useState<number | null>(null)
-  const [size, setSize] = useState<string>('inches')
+  // phần chọn kích thước màn hình
   const handleInputScreenSize = (value: number | null) => {
-    const newValue = value !== undefined ? `${value}${size}` : ''
+    const newValue = value !== undefined ? `${value} ${size}` : ''
     setScreenSize(newValue)
   }
-
   const handleSelectScreenSize = (value: string) => {
     setSize(value)
-    const newValue = screenSizeValue !== undefined ? `${screenSizeValue}${value}` : ''
+    const newValue = screenSizeValue !== undefined ? `${screenSizeValue} ${value}` : ''
     setScreenSize(newValue)
   }
+  //-------------------------------
 
   console.log(battery)
   console.log(screenSize)
+  const onFinish = async (values: any) => {
+    console.log('Success:', values)
+    const imgLink = await upload(fileList[0])
+    const mutiImgLink = await upload(mutiFileList[0])
+    const valueAdd = {
+      image: mutiImgLink,
+      name: values?.name,
+      type: values?.type,
+      brand: values?.brand,
+      description: rawHTML,
+      battery: battery,
+      cpu: values?.cpu,
+      operatingSystem: values?.operatingSystem,
+      ram: values?.ram,
+      screenReslution: values?.screenReslution,
+      screenSize: screenSize,
+      storage: values?.storage,
+      thumbnail: imgLink,
+      weight: values?.weight,
+      price: values?.price,
+      salePrice: values?.salePrice,
+      quantity: values?.quantity
+    }
+    try {
+      const data = await addPro(valueAdd);
+      console.log('data', data);
+      
+      console.log('data sumbit',valueAdd)
+      message.success('Thêm mới thành công')
+      // navigate('/admin/products')
+      // console.log(data);
+    } catch (err) {
+      message.error('Có lỗi xảy ra')
+    }
+  }
 
+  const onFinishFailed = (errorInfo: any) => { 
+    console.log('Failed:', errorInfo)
+  }
+  
   const onFormValuesChange = (changedValues: any, allValues: any) => {
     console.log('Changed values:', changedValues)
     console.log('All values:', allValues)
@@ -124,11 +150,11 @@ const AddPro: React.FC = () => {
         </Typography.Title>
       </Breadcrumb>
 
-      {/* <Form initialValues={{}} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete='on'> */}
-      <Form initialValues={{}} onValuesChange={onFormValuesChange} onFinishFailed={onFinishFailed} autoComplete='on'>
+      <Form initialValues={{}} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete='on'>
+      {/* <Form initialValues={{}} onValuesChange={onFormValuesChange} onFinishFailed={onFinishFailed} autoComplete='on'> */}
         <Row gutter={16}>
           <Col span={10}>
-            <Form.Item name='image' labelCol={{ span: 24 }} label='Hình ảnh thumbal'>
+            <Form.Item name='thumbnail  ' labelCol={{ span: 24 }} label='Hình ảnh thumbal'>
               <UploadWrapper>
                 <div style={{ textAlign: 'left', border: '0' }}>
                   <Dragger
@@ -139,7 +165,7 @@ const AddPro: React.FC = () => {
                       return false
                     }}
                     accept='image/png, image/jpg, image/jpeg, image/gif'
-                    onChange={handleChangeImage}
+                    onChange={handleChangeThumbnail}
                     onPreview={onPreview}
                     fileList={fileList}
                     style={{ border: '0' }}
@@ -152,20 +178,21 @@ const AddPro: React.FC = () => {
                 </div>
               </UploadWrapper>
             </Form.Item>
-            {/* <Form.Item name='image' labelCol={{ span: 24 }} label='Hình ảnh sản phẩm chi tiết'>
+
+            <Form.Item name='image' labelCol={{ span: 24 }} label='Hình ảnh sản phẩm chi tiết'>
               <UploadWrapper>
                 <div style={{ textAlign: 'left', border: '0' }}>
                   <Dragger
                     listType='picture'
-                    multiple={true}
-                    maxCount={10}
+                    multiple={false}
+                    maxCount={1}
                     beforeUpload={() => {
                       return false
                     }}
                     accept='image/png, image/jpg, image/jpeg, image/gif'
                     onChange={handleChangeImage}
                     onPreview={onPreview}
-                    fileList={fileList}
+                    fileList={mutiFileList}
                     style={{ border: '0' }}
                   >
                     <p className='ant-upload-drag-icon'>
@@ -175,7 +202,7 @@ const AddPro: React.FC = () => {
                   </Dragger>
                 </div>
               </UploadWrapper>
-            </Form.Item> */}
+            </Form.Item>
           </Col>
 
           <Col span={14}>
@@ -203,7 +230,7 @@ const AddPro: React.FC = () => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name='sale_price'
+                  name='salePrice'
                   label='Giá khuyến mại'
                   dependencies={['price']}
                   labelCol={{ span: 24 }}
@@ -227,7 +254,7 @@ const AddPro: React.FC = () => {
               <Col span={12}>
                 <Form.Item
                   label='Ngành hàng'
-                  name='cateId'
+                  name='type'
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Ngành hàng sản phẩm không để trống!' }]}
                 >
@@ -331,7 +358,7 @@ const AddPro: React.FC = () => {
                   <Col span={24}>
                     <Form.Item
                       label='Chipset'
-                      name='brand'
+                      name='cpu'
                       labelCol={{ span: 24 }}
                       rules={[{ required: true, message: 'Chipset sản phẩm không để trống!' }]}
                     >
@@ -372,7 +399,7 @@ const AddPro: React.FC = () => {
               <Col span={12}>
                 <Form.Item
                   label='Hệ điều hành'
-                  name='operating_system'
+                  name='operatingSystem'
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Hệ điều hành không để trống!' }]}
                 >
@@ -396,7 +423,7 @@ const AddPro: React.FC = () => {
               <Col span={12}>
                 <Form.Item
                   label='Độ phân giải màn hình'
-                  name='screen_reslution'
+                  name='screenReslution'
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Hệ điều hành không để trống!' }]}
                 >
@@ -422,7 +449,7 @@ const AddPro: React.FC = () => {
               <Col span={12}>
                 <Form.Item
                   label='Kích thước màn hình'
-                  name='screen_size'
+                  name='screenSize'
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Kích thước màn hình thiết bị không để trống!' }]}
                 >
@@ -458,7 +485,7 @@ const AddPro: React.FC = () => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name='cannang'
+                  name='weight'
                   label='Trọng lượng'
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Trọng lượng sản phẩm không để trống!' }]}
@@ -467,22 +494,13 @@ const AddPro: React.FC = () => {
                 </Form.Item>
               </Col>
             </Row>
-
             <Form.Item
-              name='short_desc'
-              labelCol={{ span: 24 }}
-              label='Mô tả nhỏ sản phẩm'
-              rules={[{ required: true, message: 'Mô tả nhỏ sản phẩm không để trống!' }]}
-            >
-              <TextArea name='short_desc' />
-            </Form.Item>
-            <Form.Item
-              name='desc'
+              name='description'
               labelCol={{ span: 24 }}
               label='Mô tả sản phẩm'
               rules={[{ required: true, message: 'Mô tả sản phẩm không để trống!' }]}
             >
-              <TextArea name='desc' />
+              <ReactQuill theme='snow' value={rawHTML} onChange={setRawHTML} id='content' />
             </Form.Item>
 
             <Form.Item>
