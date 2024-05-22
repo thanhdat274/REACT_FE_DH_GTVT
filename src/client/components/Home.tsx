@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { listCate } from '../../api/category';
 import { getAll } from '../../api/products';
 import { CateType } from '../../type/category';
 import { ProductType } from '../../type/Product';
@@ -15,9 +14,9 @@ const Home = () => {
         setPro(data);
         console.log(data);
 
-        const data1 = await listCate();
-        setCate(data1.data);
-        console.log(data1.data);
+        // const data1 = await listCate();
+        // setCate(data1.data);
+        // console.log(data1.data);
       } catch (err) {
         console.log(err);
       }
@@ -172,14 +171,14 @@ const Home = () => {
             {pro.map((item, index) => {
               return (
                 <div key={index} className="product">
-                  <Link to={`/products/${item._id}`} className="product">
+                  <Link to={`/products/${item.id}`} className="product">
                     <div className="product-img">
                       <img src={item.image} alt="" className="img-product" />
                     </div>
                     <h3 className="product-name">{item.name}</h3>
                     <div className="product-price">
                       <span className="salePrice">
-                        {item.sale_price.toLocaleString('vi-VN', {
+                        {item.salePrice.toLocaleString('vi-VN', {
                           style: 'currency',
                           currency: 'VND',
                         })}

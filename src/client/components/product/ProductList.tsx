@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { detailCategory, GetPrWithCategory, listCate } from '../../../api/category';
 import { CateType } from '../../../type/category';
 import { ProductType } from '../../../type/Product';
 
@@ -9,20 +8,20 @@ const ProductList = () => {
   const [category, setCategory] = useState<CateType>();
   const [products, setProducts] = useState<ProductType[]>([]);
 
-  useEffect(() => {
-    const getData = async () => {
-      const { data } = await detailCategory(id);
-      setCategory(data);
-      console.log(data);
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     // const { data } = await detailCategory(id);
+  //     // setCategory(data);
+  //     // console.log(data);
       
-      // phần load sản phẩm theo dnah mục
-      const resProducts = await GetPrWithCategory(id as string);
-      setProducts(resProducts.data.product);
-      console.log('sản phẩm theo danh mục',resProducts.data.product);
+  //     // phần load sản phẩm theo dnah mục
+  //     // const resProducts = await GetPrWithCategory(id as string);
+  //     setProducts(resProducts.data.product);
+  //     console.log('sản phẩm theo danh mục',resProducts.data.product);
       
-    };
-    getData();
-  }, [id]);
+  //   };
+  //   getData();
+  // }, [id]);
 
   return (
     <div>
@@ -46,17 +45,17 @@ const ProductList = () => {
               {products && products.map((item , index) => {
                     return (
                       <div className="product" key={index}>
-                        <Link to={`/products/${item._id}`} className="product">
+                        <Link to={`/products/${item.id}`} className="product">
                           <div className="product-img">
                             <img src={item.image} alt="" className="img-product" />
                           </div>
                           <h3 className="product-name">{item.name}</h3>
                           <div className="product-price">
                             <span className="salePrice">
-                              {item.sale_price.toLocaleString('vi-VN', {
+                              {/* {item.sale_price.toLocaleString('vi-VN', {
                                 style: 'currency',
                                 currency: 'VND',
-                              })}
+                              })} */}
                             </span>
                             <span className="costPrice">
                               {item.price.toLocaleString('vi-VN', {

@@ -5,14 +5,13 @@ import { PlusSquareOutlined } from '@ant-design/icons'
 import { UploadProps } from 'antd/es/upload'
 import { RcFile } from 'antd/lib/upload'
 import Dragger from 'antd/es/upload/Dragger'
-import { upload } from '../../../api/images'
-import { addPro } from '../../../api/products'
+
 import styled from 'styled-components'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { ProductType } from '@/type/Product'
+import { upload } from '@/api/images'
+import { addPro } from '@/api/products'
 
-const { TextArea } = Input
 const { Option } = Select
 const optionsByCategory: any = {
   dienthoai: ['Apple', 'Samsung', 'Xiaomi', 'Oppo', 'Realme', 'Nokia', 'Oneplus', 'Asus'],
@@ -31,14 +30,6 @@ const AddPro: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [brands, setBrands] = useState([])
   const [form] = Form.useForm()
-  // phần battery
-  const [battery, setBattery] = useState<string>('')
-  const [batteryValue, setBatteryValue] = useState<number | null>(null)
-  const [unit, setUnit] = useState<string>('mah')
-  // phần thông tin màn hình
-  const [screenSize, setScreenSize] = useState<string>('')
-  const [screenSizeValue, setScreenSizeValue] = useState<number | null>(null)
-  const [size, setSize] = useState<string>('inches')
 
   // phần chọn ngành hàng và select ra thương hiệu
   const handleCategoryChange = (value: string) => {
@@ -71,32 +62,6 @@ const AddPro: React.FC = () => {
   }
   //---------------------------------------
 
-  // phần chọn dung lượng pin
-  const handleInputBattery = (value: number | null) => {
-    const newValue = value !== undefined ? `${value} ${unit}` : ''
-    setBattery(newValue)
-  }
-  const handleSelectBattery = (value: string) => {
-    setUnit(value)
-    const newValue = batteryValue !== undefined ? `${batteryValue} ${value}` : ''
-    setBattery(newValue)
-  }
-  //----------------------------------------
-
-  // phần chọn kích thước màn hình
-  const handleInputScreenSize = (value: number | null) => {
-    const newValue = value !== undefined ? `${value} ${size}` : ''
-    setScreenSize(newValue)
-  }
-  const handleSelectScreenSize = (value: string) => {
-    setSize(value)
-    const newValue = screenSizeValue !== undefined ? `${screenSizeValue} ${value}` : ''
-    setScreenSize(newValue)
-  }
-  //-------------------------------
-
-  console.log(battery)
-  console.log(screenSize)
   const onFinish = async (values: any) => {
     console.log('Success:', values)
     const imgLink = await upload(fileList[0])
@@ -107,12 +72,12 @@ const AddPro: React.FC = () => {
       type: values?.type,
       brand: values?.brand,
       description: rawHTML,
-      battery: battery,
+      battery: values?.battery,
       cpu: values?.cpu,
       operatingSystem: values?.operatingSystem,
       ram: values?.ram,
       screenReslution: values?.screenReslution,
-      screenSize: screenSize,
+      screenSize: values?.screenSize,
       storage: values?.storage,
       thumbnail: imgLink,
       weight: values?.weight,
@@ -120,26 +85,21 @@ const AddPro: React.FC = () => {
       salePrice: values?.salePrice,
       quantity: values?.quantity
     }
-    try {
-      const data = await addPro(valueAdd);
-      console.log('data', data);
-      
-      console.log('data sumbit',valueAdd)
+
+    const data = await addPro(valueAdd)
+    if (data?.data?.code == '00') {
+      console.log('data response', data?.data)
       message.success('Thêm mới thành công')
-      // navigate('/admin/products')
-      // console.log(data);
-    } catch (err) {
-      message.error('Có lỗi xảy ra')
+      setTimeout(() => {
+        navigate('/admin/products')
+      }, 2000)
+    } else {
+      message.error(data?.data?.message)
     }
   }
 
-  const onFinishFailed = (errorInfo: any) => { 
+  const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
-  }
-  
-  const onFormValuesChange = (changedValues: any, allValues: any) => {
-    console.log('Changed values:', changedValues)
-    console.log('All values:', allValues)
   }
 
   return (
@@ -151,7 +111,6 @@ const AddPro: React.FC = () => {
       </Breadcrumb>
 
       <Form initialValues={{}} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete='on'>
-      {/* <Form initialValues={{}} onValuesChange={onFormValuesChange} onFinishFailed={onFinishFailed} autoComplete='on'> */}
         <Row gutter={16}>
           <Col span={10}>
             <Form.Item name='thumbnail  ' labelCol={{ span: 24 }} label='Hình ảnh thumbal'>
@@ -370,30 +329,12 @@ const AddPro: React.FC = () => {
 
               <Col span={12}>
                 <Form.Item
-                  label='Dung lượng pin sản phẩm'
+                  label='Dung lượng pin sản phẩm (mah, cell, kwh)'
                   name='battery'
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Dung lượng pin thiết bị không để trống!' }]}
                 >
-                  <div style={{ position: 'relative', width: '100%' }}>
-                    <InputNumber style={{ width: '70%' }} size='large' onChange={handleInputBattery} />
-                    <Select
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
-                        width: '30%',
-                        height: '100%'
-                      }}
-                      size='large'
-                      defaultValue='mah'
-                      onChange={handleSelectBattery}
-                    >
-                      <Select.Option value='mah'>mah</Select.Option>
-                      <Select.Option value='kwh'>kwh</Select.Option>
-                      <Select.Option value='cell'>cell</Select.Option>
-                    </Select>
-                  </div>
+                  <Input style={{ width: '100%' }} size='large' />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -448,28 +389,12 @@ const AddPro: React.FC = () => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  label='Kích thước màn hình'
+                  label='Kích thước màn hình (inches)'
                   name='screenSize'
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Kích thước màn hình thiết bị không để trống!' }]}
                 >
-                  <div style={{ position: 'relative', width: '100%' }}>
-                    <InputNumber style={{ width: '70%' }} size='large' onChange={handleInputScreenSize} />
-                    <Select
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
-                        width: '30%',
-                        height: '100%'
-                      }}
-                      size='large'
-                      defaultValue='inches'
-                      onChange={handleSelectScreenSize}
-                    >
-                      <Select.Option value='inches'>inches</Select.Option>
-                    </Select>
-                  </div>
+                  <Input style={{ width: '100%' }} size='large' />
                 </Form.Item>
               </Col>
 

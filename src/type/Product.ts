@@ -1,8 +1,8 @@
 export type ProductType = {
   id?: number,
-  name: String,
+  name: string,
   type: string,
-  brand: String,
+  brand: string,
   description: string,
   battery: string,
   cpu: string,

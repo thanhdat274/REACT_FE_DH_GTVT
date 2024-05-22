@@ -1,131 +1,132 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { ProductType } from '../../../type/Product';
-import { CateType } from '../../../type/category';
-import { listOnePro, similarProduct } from '../../../api/products';
-import { detailCategory } from '../../../api/category';
-import { useDispatch } from 'react-redux';
-import { message } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { ProductType } from '../../../type/Product'
+import { CateType } from '../../../type/category'
+import { listOnePro } from '../../../api/products'
+import { useDispatch } from 'react-redux'
+import { message } from 'antd'
 
 const ProductDetail = () => {
-  const { id } = useParams();
-  console.log(id);
-  
-  const [pro, setPro] = useState<ProductType>();
-  const [cate, setCate] = useState<CateType>();
-  const [similarpr, setSimilarpr] = useState<ProductType[]>([]);
+  const { id } = useParams()
+  console.log(id)
+
+  const [pro, setPro] = useState<ProductType>()
+  const [cate, setCate] = useState<CateType>()
+  const [similarpr, setSimilarpr] = useState<ProductType[]>([])
 
   useEffect(() => {
     const getProduct = async () => {
-      const { data } = await listOnePro(id as string);
-      setPro(data);
-      console.log(data);
-      
+      const { data } = await listOnePro(id as number)
+      setPro(data)
+      console.log(data)
+
       // biến gọi hàm load 1 cate
-      const resCate = await detailCategory(data.cateId);
-      setCate(resCate.data);
-      console.log( 'id',resCate.data);
-      
+      // const resCate = await detailCategory(data.cateId);
+      // setCate(resCate.data);
+      // console.log( 'id',resCate.data);
+
       // hàm load dữ liệu của sản phẩm cùng loại
-      const similarProductRes = await similarProduct(data.cateId);
-      setSimilarpr(similarProductRes.data);
-      console.log('sản phẩm',similarProductRes.data);
-      
-    };
-    getProduct();
-  }, [id]);
-  
-  const dispatch = useDispatch();
+      // const similarProductRes = await similarProduct(data.cateId)
+      // setSimilarpr(similarProductRes.data)
+      // console.log('sản phẩm', similarProductRes.data)
+    }
+    getProduct()
+  }, [id])
+
+  const dispatch = useDispatch()
 
   const addToCart = (item: any) => {
-    message.success("Thêm vào giỏ hàng thành công");
+    message.success('Thêm vào giỏ hàng thành công')
 
-    item.quantity1 = 1;
+    item.quantity1 = 1
     dispatch({
-      type: "cart/add",
-      payload: item,
-    });
-  };
+      type: 'cart/add',
+      payload: item
+    })
+  }
   return (
     <div>
-      <main className="my-[20px]">
-        <div className="w-[1080px] py-[10px] mx-auto flex border-b-2 border-[#f2f2f2]">
-          <div className="text-black">
-            <i className="fa-solid fa-house text-red-600 mr-[10px]"></i>
-            <Link to="/" className="text-black hover:text-black font-semibold">
+      <main className='my-[20px]'>
+        <div className='w-[1080px] py-[10px] mx-auto flex border-b-2 border-[#f2f2f2]'>
+          <div className='text-black'>
+            <i className='fa-solid fa-house text-red-600 mr-[10px]'></i>
+            <Link to='/' className='text-black hover:text-black font-semibold'>
               Trang chủ
             </Link>
           </div>
-          <div className="mx-2 text-[#5d5f6c]">
-            <i className="fa fa-angle-right" aria-hidden="true" />
+          <div className='mx-2 text-[#5d5f6c]'>
+            <i className='fa fa-angle-right' aria-hidden='true' />
           </div>
-          <div className="text-black font-semibold">
-            <Link to={`/category/${cate?._id}`} className="text-black hover:text-black font-semibold">
+          <div className='text-black font-semibold'>
+            <Link to={`/category/${cate?._id}`} className='text-black hover:text-black font-semibold'>
               {cate?.name}
             </Link>
           </div>
-          <div className="mx-2 text-[#5d5f6c]">
-            <i className="fa fa-angle-right" aria-hidden="true" />
+          <div className='mx-2 text-[#5d5f6c]'>
+            <i className='fa fa-angle-right' aria-hidden='true' />
           </div>
-          <div className="text-black font-semibold">{pro?.name}</div>
+          <div className='text-black font-semibold'>{pro?.name}</div>
         </div>
-        <div className="w-[1440px] h-auto mx-auto">
-          <div className="w-[1080px] h-auto mx-auto">
-            <div className="w-[1080px] py-[5px] flex border-b-2 border-[#f2f2f2]">
-              <div className="text-[24px] font-semibold w-[980px]">{pro?.name}</div>
+        <div className='w-[1440px] h-auto mx-auto'>
+          <div className='w-[1080px] h-auto mx-auto'>
+            <div className='w-[1080px] py-[5px] flex border-b-2 border-[#f2f2f2]'>
+              <div className='text-[24px] font-semibold w-[980px]'>{pro?.name}</div>
             </div>
-            <div className="w-[1080px] h-auto flex justify-between mt-[20px]">
-              <div className="w-[398px] h-[398px] mx-auto border flex justify-center item-center">
+            <div className='w-[1080px] h-auto flex justify-between mt-[20px]'>
+              <div className='w-[398px] h-[398px] mx-auto border flex justify-center item-center'>
                 <div>
                   {/* <img src={pro?.image} alt={`${pro?.desc_img}`} className="w-[358px] h-[358px] my-[20px]" /> */}
                 </div>
               </div>
-              <div className="w-[460px]">
-                <div className="flex mb-[20px]">
-                  <span className="text-[red] font-semibold text-[24px] mr-5">
-                    {pro?.sale_price.toLocaleString('vi-VN', {
+              <div className='w-[460px]'>
+                <div className='flex mb-[20px]'>
+                  <span className='text-[red] font-semibold text-[24px] mr-5'>
+                    {/* {pro?.sale_price.toLocaleString('vi-VN', {
                       style: 'currency',
                       currency: 'VND',
-                    })}
+                    })} */}
                   </span>
-                  <span className="text-[gray] font-semibold text-[18px] line-through mr-5">
+                  <span className='text-[gray] font-semibold text-[18px] line-through mr-5'>
                     {pro?.price.toLocaleString('vi-VN', {
                       style: 'currency',
-                      currency: 'VND',
+                      currency: 'VND'
                     })}
                   </span>
                 </div>
-                <div className="flex">
-                  <div className="text-[#1e1e27] mt-1">Số lượng:</div>
-                  <div className="mx-3 border h-[40px] w-[120px] flex justify-around">
-                    <input type="number" id="inputValue" defaultValue={1} className="w-10 text-center mx-2" />
+                <div className='flex'>
+                  <div className='text-[#1e1e27] mt-1'>Số lượng:</div>
+                  <div className='mx-3 border h-[40px] w-[120px] flex justify-around'>
+                    <input type='number' id='inputValue' defaultValue={1} className='w-10 text-center mx-2' />
                   </div>
                 </div>
-                <div className="mt-7">
-                  <button className="bg-red-500 h-10 w-44 rounded-sm text-white" onClick={()=>{
-                    addToCart(pro);
-                  }}>
-                    <i className="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng
+                <div className='mt-7'>
+                  <button
+                    className='bg-red-500 h-10 w-44 rounded-sm text-white'
+                    onClick={() => {
+                      addToCart(pro)
+                    }}
+                  >
+                    <i className='fa-solid fa-cart-plus'></i> Thêm vào giỏ hàng
                   </button>
                 </div>
-                <div className="text-[#51545f] my-[20px] w-[460px]">
-                  <h1 className="text-[21px] font-semibold">Thông tin sản phẩm:</h1>
+                <div className='text-[#51545f] my-[20px] w-[460px]'>
+                  <h1 className='text-[21px] font-semibold'>Thông tin sản phẩm:</h1>
                   {/* <div className="font-medium text-[16px] break-words mt-[10px]">{pro?.short_desc}</div> */}
                 </div>
               </div>
             </div>
           </div>
-          <div className="w-[1080px] h-auto mx-auto ">
-            <div className="text-[#5d5f6c] text-2xl font-medium mt-[50px] uppercase border-b-2 border-[#f2f2f2]">
+          <div className='w-[1080px] h-auto mx-auto '>
+            <div className='text-[#5d5f6c] text-2xl font-medium mt-[50px] uppercase border-b-2 border-[#f2f2f2]'>
               thông tin chi tiết sản phẩm
             </div>
             {/* <div className="w-[1080px] my-[20px]">{pro?.desc}</div> */}
           </div>
-          <div className="w-[1080px] h-auto mx-auto">
-            <div className="text-[#5d5f6c] text-2xl font-medium mt-14 uppercase border-b-2 border-[#f2f2f2]">
+          <div className='w-[1080px] h-auto mx-auto'>
+            <div className='text-[#5d5f6c] text-2xl font-medium mt-14 uppercase border-b-2 border-[#f2f2f2]'>
               Sản phẩm liên quan
             </div>
-            <div className="w-[1080px] my-[20px]">
+            <div className='w-[1080px] my-[20px]'>
               {/* <div className="product-list">
                 {similarpr
                   .filter((item) => item.cateId === pro?.cateId)
@@ -196,7 +197,7 @@ const ProductDetail = () => {
         </div>
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default ProductDetail;
+export default ProductDetail

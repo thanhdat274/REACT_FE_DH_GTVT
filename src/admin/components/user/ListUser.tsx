@@ -12,14 +12,14 @@ const ListUser = () => {
   const data = user.map((item, index) => {
     return {
       key: index + 1,
-      _id: item._id,
+      id: item.id,
       image: item.image,
       name: item.name,
       email: item.email,
       password: item.password,
       phone: item.phone,
       address: item.address,
-      role: item.role,
+      role: item.roleId,
     };
   });
   const columns: ColumnsType<UserType> = [
@@ -58,8 +58,8 @@ const ListUser = () => {
       key: 'action',
       render: (record: UserType) => (
         <Space size="middle">
-          <Link to={`${record._id}/edit`}>
-            <button style={{ border: '0px', fontSize: '20px' }} onClick={() => console.log(`${record._id}`)}>
+          <Link to={`${record.id}/edit`}>
+            <button style={{ border: '0px', fontSize: '20px' }} onClick={() => console.log(`${record.id}`)}>
               {' '}
               <EditOutlined />
             </button>
@@ -68,7 +68,7 @@ const ListUser = () => {
             <DeleteOutlined
               style={{ color: 'red' }}
               onClick={() => {
-                onDelete(record._id as string);
+                onDelete(record.id);
               }}
             />
           </button>
@@ -90,7 +90,7 @@ const ListUser = () => {
     fetchData();
   }, []);
 
-  const onDelete = async (id: string) => {
+  const onDelete = async (id: number) => {
     console.log(id);
 
     Modal.confirm({
@@ -98,7 +98,7 @@ const ListUser = () => {
       onOk: async () => {
         const { data } = await deleteUser(id);
         if (data) {
-          setUser(user.filter((item) => item._id !== id));
+          setUser(user.filter((item) => item.id !== id));
         }
         message.success('Xóa thành công');
       },

@@ -5,20 +5,20 @@ export const listUser = () => {
     const url = '/user'
     return instance.get(url);
 }
-export const listOneUser = (id: string) => {
+export const listOneUser = (id: number) => {
     const url = `/user/${id}`
     return instance.get(url);
 }
-export const deleteUser = (id: string) => {
+export const deleteUser = (id: number) => {
     const url = `/user/${id}`
     return instance.delete(url)
 }
 export const addUser = (use: UserType) => {
-    const url = '/user'
+    const url = '/user/add'
     return instance.post(url, use);
 }
 export const updateUser = (use: UserType) => {
-    const url = `/user/${use._id}`
+    const url = `/user/${use.id}`
     return instance.put(url, use);
 }
 

@@ -13,61 +13,68 @@ const ListPro = () => {
   const data = pro.map((item, index) => {
     return {
       key: index + 1,
-      _id: item._id,
-      image: item.image,
-      name: item.name,
-      price: item.price,
-      sale_price: item.sale_price,
-      quantity: item.quantity,
-      desc_img: item.desc_img,
-      desc: item.desc,
-      short_desc: item.short_desc,
-      cateId: item.cateId,
-    };
+      id: item?.id,
+      image: item?.image,
+      name: item?.name,
+      type: item?.type,
+      brand: item?.brand,
+      description: item?.description,
+      battery: item?.battery,
+      cpu: item?.cpu,
+      operatingSystem: item?.operatingSystem,
+      ram: item?.ram,
+      screenReslution: item?.screenReslution,
+      screenSize: item?.screenSize,
+      storage: item?.storage,
+      thumbnail: item?.thumbnail,
+      weight: item?.weight,
+      price: item?.price,
+      salePrice: item?.salePrice,
+      quantity: item?.quantity
+    }
   });
   const columns: ColumnsType<ProductType> = [
     {
       title: 'ID',
       dataIndex: 'key',
-      key: 'id',
+      key: 'id'
     },
     {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => <p style={{ width: '200px' }}>{text}</p>,
+      render: (text) => <p style={{ width: '200px' }}>{text}</p>
     },
     {
       title: 'Giá gốc',
       dataIndex: 'price',
-      key: 'price',
+      key: 'price'
     },
     {
       title: 'Giá khuyến mãi',
-      dataIndex: 'sale_price',
-      key: 'sale_price',
+      dataIndex: 'salePrice',
+      key: 'salePrice'
     },
     {
       title: 'Hình ảnh',
       dataIndex: 'image',
       key: 'image',
       render: (text: string, record: ProductType) => {
-        return <Image width={200} src={text} />;
-      },
+        return <Image width={200} src={text} />
+      }
     },
     {
-      title: 'Mô tả',
-      dataIndex: 'desc',
-      key: 'desc',
-      render: (text) => <textarea cols={6} rows={12} style={{ width: '500px' }}>{text}</textarea>,
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
     },
     {
       title: 'Action',
       key: 'action',
       render: (record: ProductType) => (
-        <Space size="middle">
-          <Link to={`${record._id}/edit`}>
-            <button style={{ border: '0px', fontSize: '20px' }} onClick={() => console.log(`${record._id}`)}>
+        <Space size='middle'>
+          <Link to={`${record.id}/edit`}>
+            <button style={{ border: '0px', fontSize: '20px' }} onClick={() => console.log(`${record.id}`)}>
               {' '}
               <EditOutlined />
             </button>
@@ -76,14 +83,14 @@ const ListPro = () => {
             <DeleteOutlined
               style={{ color: 'red' }}
               onClick={() => {
-                onDelete(record._id as string);
+                onDelete(record.id as number)
               }}
             />
           </button>
         </Space>
-      ),
-    },
-  ];
+      )
+    }
+  ]
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,7 +105,7 @@ const ListPro = () => {
     fetchData();
   }, []);
 
-  const onDelete = async (id: string) => {
+  const onDelete = async (id: number) => {
     console.log(id);
 
     Modal.confirm({
@@ -106,7 +113,7 @@ const ListPro = () => {
       onOk: async () => {
         const { data } = await remove(id);
         if (data) {
-          setPro(pro.filter((item) => item._id !== id));
+          setPro(pro.filter((item) => item.id !== id));
         }
         message.success('Xóa thành công');
       },
