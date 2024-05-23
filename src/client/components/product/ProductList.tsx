@@ -4,7 +4,7 @@ import { CateType } from '../../../type/category';
 import { ProductType } from '../../../type/Product';
 
 const ProductList = () => {
-  const { id } = useParams();
+  const { type } = useParams();
   const [category, setCategory] = useState<CateType>();
   const [products, setProducts] = useState<ProductType[]>([]);
 

@@ -72,11 +72,11 @@ const EditPro: React.FC = () => {
       const { data } = await listOnePro(id)
       console.log(id)
       console.log(data)
-      setPro(data)
-      if (data?.type) {
-        handleCategoryChange(data?.type)
+      setPro(data?.data)
+      if (data?.data?.type) {
+        handleCategoryChange(data?.data?.type)
       }
-      form.setFieldsValue(data)
+      form.setFieldsValue(data?.data)
     }
 
     getPro(id as number)

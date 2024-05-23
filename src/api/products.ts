@@ -7,7 +7,7 @@ export const getAll = () => {
     return instance.get(url)
 }
 export const listOnePro = (id: number) => {
-    const url = `/products/${id}`
+    const url = `/products/detail/${id}`
     return instance.get(url);
 }
 export const remove = (id: number) => {
@@ -15,7 +15,7 @@ export const remove = (id: number) => {
     return instance.delete(url)
 }
 export const addPro = (data: ProductType) => {
-    const url = "/products"
+    const url = "/products/add"
     return instance.post(url, data)
 }
 export const editPro = (data: ProductType) => {

@@ -99,9 +99,9 @@ const ListPro = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAll()
-        setPro(data.data)
-        console.log(data.data)
+        const { data } = await getAll()
+        setPro(data?.data)
+        console.log(data?.data)
       } catch (err) {
         console.log(err)
       }
@@ -116,7 +116,7 @@ const ListPro = () => {
       title: 'Bạn có muốn xóa không?',
       onOk: async () => {
         const { data } = await remove(id)
-        if (data) {
+        if (data?.data) {
           setPro(pro.filter((item) => item.id !== id))
         }
         message.success('Xóa thành công')
