@@ -184,7 +184,12 @@ const AddPro: React.FC = () => {
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Gíá sản phẩm không để trống!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} size='large' />
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    size='large'
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => (value ? value.replace(/\$\s?|(,*)/g, '') : '')}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -206,7 +211,12 @@ const AddPro: React.FC = () => {
                     })
                   ]}
                 >
-                  <InputNumber style={{ width: '100%' }} size='large' />
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    size='large'
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => (value ? value.replace(/\$\s?|(,*)/g, '') : '')}
+                  />
                 </Form.Item>
               </Col>
 
@@ -405,7 +415,12 @@ const AddPro: React.FC = () => {
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Số lượng sản phẩm không để trống!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} size='large' />
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    size='large'
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => (value ? value.replace(/\$\s?|(,*)/g, '') : '')}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>

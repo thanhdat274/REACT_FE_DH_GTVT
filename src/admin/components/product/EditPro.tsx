@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Typography, Col, Row, Button, Checkbox, Form, Input, InputNumber, Select, message, UploadFile } from 'antd'
+import { Typography, Col, Row, Button, Form, Input, InputNumber, Select, message, UploadFile } from 'antd'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { PlusCircleOutlined, PlusSquareOutlined } from '@ant-design/icons'
+import { PlusSquareOutlined } from '@ant-design/icons'
 import Dragger from 'antd/lib/upload/Dragger'
 import { UploadProps } from 'antd/es/upload'
 import { RcFile } from 'antd/lib/upload'
@@ -35,10 +35,11 @@ const EditPro: React.FC = () => {
   const handleCategoryChange = (value: string) => {
     if (pro && pro?.type === value) {
       setBrands(optionsByCategory[pro?.brand] || [])
+      setSelectedCategory(value)
     } else {
       setBrands(optionsByCategory[value] || [])
+      setSelectedCategory(value)
     }
-    setSelectedCategory(value)
     form.setFieldsValue({ brand: undefined })
   }
   //---------------------------------------------------
@@ -72,11 +73,10 @@ const EditPro: React.FC = () => {
       console.log(id)
       console.log(data)
       setPro(data)
-      form.setFieldsValue(data)
-      // Gọi handleCategoryChange với dữ liệu của pro
       if (data?.type) {
-        handleCategoryChange(data.type)
+        handleCategoryChange(data?.type)
       }
+      form.setFieldsValue(data)
     }
 
     getPro(id as number)
@@ -186,7 +186,7 @@ const EditPro: React.FC = () => {
               label='Tên sản phẩm'
               rules={[{ required: true, message: 'Tên sản phẩm không để trống!' }]}
             >
-              <Input size='large' />
+              <Input size='large' disabled />
             </Form.Item>
 
             <Row gutter={16}>
@@ -197,7 +197,12 @@ const EditPro: React.FC = () => {
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Gíá sản phẩm không để trống!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} size='large' />
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    size='large'
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => (value ? value.replace(/\$\s?|(,*)/g, '') : '')}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -219,7 +224,12 @@ const EditPro: React.FC = () => {
                     })
                   ]}
                 >
-                  <InputNumber style={{ width: '100%' }} size='large' />
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    size='large'
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => (value ? value.replace(/\$\s?|(,*)/g, '') : '')}
+                  />
                 </Form.Item>
               </Col>
 
@@ -238,6 +248,7 @@ const EditPro: React.FC = () => {
                     showSearch
                     optionFilterProp='children'
                     onChange={handleCategoryChange}
+                    disabled
                   >
                     <Select.Option value='dienthoai'>Điện thoại</Select.Option>
                     <Select.Option value='laptop'>Laptop</Select.Option>
@@ -262,8 +273,8 @@ const EditPro: React.FC = () => {
                     placeholder='Lựa chọn'
                     allowClear
                     showSearch
-                    value={pro?.brand}
                     optionFilterProp='children'
+                    disabled
                   >
                     {brands?.map((brand) => (
                       <Option key={brand} value={brand}>
@@ -290,6 +301,7 @@ const EditPro: React.FC = () => {
                         allowClear
                         showSearch
                         optionFilterProp='children'
+                        disabled
                       >
                         <Select.Option value='16GB'>16GB</Select.Option>
                         <Select.Option value='32GB'>32GB</Select.Option>
@@ -312,6 +324,7 @@ const EditPro: React.FC = () => {
                         style={{ width: '100%' }}
                         size='large'
                         placeholder='Lựa chọn'
+                        disabled
                         allowClear
                         showSearch
                         optionFilterProp='children'
@@ -335,7 +348,7 @@ const EditPro: React.FC = () => {
                       labelCol={{ span: 24 }}
                       rules={[{ required: true, message: 'Chipset sản phẩm không để trống!' }]}
                     >
-                      <Input style={{ width: '100%' }} size='large' />
+                      <Input style={{ width: '100%' }} size='large' disabled />
                     </Form.Item>
                   </Col>
                 </>
@@ -348,7 +361,11 @@ const EditPro: React.FC = () => {
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Dung lượng pin thiết bị không để trống!' }]}
                 >
-                  <Input style={{ width: '100%' }} size='large' />
+                  <Input
+                    style={{ width: '100%' }}
+                    size='large'
+                    disabled
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -365,6 +382,7 @@ const EditPro: React.FC = () => {
                     allowClear
                     showSearch
                     optionFilterProp='children'
+                    disabled
                   >
                     <Select.Option value='Windows'>Windows</Select.Option>
                     <Select.Option value='Mac OS'>Mac OS</Select.Option>
@@ -389,6 +407,7 @@ const EditPro: React.FC = () => {
                     allowClear
                     showSearch
                     optionFilterProp='children'
+                    disabled
                   >
                     <Select.Option value='HD (1280x720)'>HD (1280x720)</Select.Option>
                     <Select.Option value='Full HD (1920x1080)'>Full HD (1920x1080)</Select.Option>
@@ -408,7 +427,7 @@ const EditPro: React.FC = () => {
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Kích thước màn hình thiết bị không để trống!' }]}
                 >
-                  <Input style={{ width: '100%' }} size='large' />
+                  <Input style={{ width: '100%' }} size='large' disabled />
                 </Form.Item>
               </Col>
 
@@ -419,7 +438,12 @@ const EditPro: React.FC = () => {
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Số lượng sản phẩm không để trống!' }]}
                 >
-                  <InputNumber style={{ width: '100%' }} size='large' />
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    size='large'
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => (value ? value.replace(/\$\s?|(,*)/g, '') : '')}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -429,7 +453,7 @@ const EditPro: React.FC = () => {
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Trọng lượng sản phẩm không để trống!' }]}
                 >
-                  <Input style={{ width: '100%' }} size='large' />
+                  <Input style={{ width: '100%' }} size='large' disabled />
                 </Form.Item>
               </Col>
             </Row>
