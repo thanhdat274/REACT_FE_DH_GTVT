@@ -11,15 +11,46 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { upload } from '@/api/images'
 import { addPro } from '@/api/products'
+import { ProductType } from '@/type/Product'
 
 const { Option } = Select
+
+const optionsByCategory1: any = {
+  productTypes: [
+    'dienthoai',
+    'laptop',
+    'tablet',
+    'amthanh',
+    'dongho',
+    'nhathongminh',
+    'phukien',
+    'pc_manhinh',
+    'tivi',
+    'hangcu'
+  ]
+}
+const typeDisplayNames: { [key: string]: string } = {
+  dienthoai: 'Điện thoại',
+  laptop: 'Laptop',
+  tablet: 'Máy tính bảng',
+  amthanh: 'Âm thanh',
+  dongho: 'Đồng hồ',
+  nhathongminh: 'Nhà thông minh',
+  phukien: 'Phụ kiện',
+  pc_manhinh: 'PC-Màn hình',
+  tivi: 'Tivi',
+  hangcu: 'Hàng cũ'
+}
 const optionsByCategory: any = {
   dienthoai: ['Apple', 'Samsung', 'Xiaomi', 'Oppo', 'Realme', 'Nokia', 'Oneplus', 'Asus'],
   laptop: ['Dell', 'HP', 'Lenovo'],
   tablet: ['iPad', 'Samsung', 'Huawei'],
   amthanh: ['Sony', 'JBL', 'Bose'],
   dongho: ['Rolex', 'Casio', 'Omega'],
+  nhathongminh: ['Charger', 'Headphones', 'Cables'],
   phukien: ['Charger', 'Headphones', 'Cables'],
+  pc_manhinh: ['Charger', 'Headphones', 'Cables'],
+  tivi: ['Charger', 'Headphones', 'Cables'],
   hangcu: ['Used Phone', 'Used Laptop', 'Used Tablet']
 }
 const AddPro: React.FC = () => {
@@ -30,6 +61,7 @@ const AddPro: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [brands, setBrands] = useState([])
   const [form] = Form.useForm()
+
 
   // phần chọn ngành hàng và select ra thương hiệu
   const handleCategoryChange = (value: string) => {
@@ -236,13 +268,9 @@ const AddPro: React.FC = () => {
                     optionFilterProp='children'
                     onChange={handleCategoryChange}
                   >
-                    <Select.Option value='dienthoai'>Điện thoại</Select.Option>
-                    <Select.Option value='laptop'>Laptop</Select.Option>
-                    <Select.Option value='tablet'>Tablet</Select.Option>
-                    <Select.Option value='amthanh'>Âm thanh</Select.Option>
-                    <Select.Option value='dongho'>Đồng hồ</Select.Option>
-                    <Select.Option value='phukien'>Phụ kiện</Select.Option>
-                    <Select.Option value='hangcu'>Hàng cũ</Select.Option>
+                    {optionsByCategory1.productTypes.map((type: string) => (
+                      <Select.Option value={type}>{typeDisplayNames[type]}</Select.Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>

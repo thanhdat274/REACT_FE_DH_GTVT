@@ -34,10 +34,11 @@ function App() {
           <Route path='smember' element={<ThongTinAccount />} />
 
           {/* phàn sản phảm theo danh mục */}
-          <Route path='category/:id' element={<ProductList />} />
+          <Route path='product/:type' element={<ProductList />} />
           {/* phàn product */}
           <Route path='products/:id' element={<ProductDetail />} />
         </Route>
+
         {/* phần admin */}
         <Route
           path='/admin'

@@ -1,27 +1,44 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getAll } from '../../api/products'
-import { CateType } from '../../type/category'
 import { ProductType } from '../../type/Product'
 import { Smartphone } from 'lucide-react'
 
 const optionsByCategory: any = {
-  productTypes: ['dienthoai', 'laptop', 'tablet', 'amthanh', 'dongho', 'phukien', 'hangcu']
+  productTypes: [
+    'dienthoai',
+    'laptop',
+    'tablet',
+    'amthanh',
+    'dongho',
+    'nhathongminh',
+    'phukien',
+    'pc_manhinh',
+    'tivi',
+    'hangcu'
+  ]
+}
+const typeDisplayNames: { [key: string]: string } = {
+  dienthoai: 'Điện thoại',
+  laptop: 'Laptop',
+  tablet: 'Máy tính bảng',
+  amthanh: 'Âm thanh',
+  dongho: 'Đồng hồ',
+  nhathongminh: 'Nhà thông minh',
+  phukien: 'Phụ kiện',
+  pc_manhinh: 'PC-Màn hình',
+  tivi: 'Tivi',
+  hangcu: 'Hàng cũ'
 }
 const Home = () => {
   const [pro, setPro] = useState<ProductType[]>([])
-  const [cate, setCate] = useState<CateType[]>([])
   const [filteredProducts, setFilteredProducts] = useState<{ [key: string]: ProductType[] }>({})
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await getAll()
-        setPro(data)
-        console.log(data)
-
-        // const data1 = await listCate();
-        // setCate(data1.data);
-        // console.log(data1.data);
+        setPro(data?.data)
+        console.log(data?.data)
       } catch (err) {
         console.log(err)
       }
@@ -29,19 +46,19 @@ const Home = () => {
     fetchData()
   }, [])
 
-    useEffect(() => {
-      const filterProductsByType = () => {
-        const categorizedProducts: { [key: string]: ProductType[] } = {}
+  useEffect(() => {
+    const filterProductsByType = () => {
+      const categorizedProducts: { [key: string]: ProductType[] } = {}
 
-        optionsByCategory.productTypes.forEach((type: string) => {
-          categorizedProducts[type] = pro.filter((pro) => pro.type === type)
-        })
+      optionsByCategory.productTypes.forEach((type: string) => {
+        categorizedProducts[type] = pro.filter((pro) => pro?.type === type)
+      })
 
-        setFilteredProducts(categorizedProducts)
-      }
+      setFilteredProducts(categorizedProducts)
+    }
 
-      filterProductsByType()
-    }, [pro])
+    filterProductsByType()
+  }, [pro])
   return (
     <div>
       <div className='content'>
@@ -49,190 +66,33 @@ const Home = () => {
           <div className='menu-wrapper'>
             <div className='menu-tree'>
               <ul className='menu-tree'>
+                {optionsByCategory.productTypes.map((type: string) => (
+                  <li className='label-menu-tree'>
+                    <Link to={`/product/${type}`} className='label-item'>
+                      <span> {typeDisplayNames[type]}</span>
+                      <div data-v-78fbd3bf='' className='icon-right'>
+                        <svg height='{15}' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
+                          <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
+                        </svg>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
                 <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{
-                        backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon-cps-3.svg')"
-                      }}
-                    ></i>
-
-                    <span>Điện thoại</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='{15}' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{
-                        backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon-cps-380.svg')"
-                      }}
-                    ></i>
-                    <span>Laptop</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='{15}' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{
-                        backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon-cps-4.svg')"
-                      }}
-                    ></i>
-                    <span>Máy tính bảng</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='15' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{
-                        backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon-cps-220.svg')"
-                      }}
-                    ></i>
-                    <span>Âm thanh</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='15' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{
-                        backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon-cps-610.svg')"
-                      }}
-                    ></i>
-                    <span>Đồng hồ</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='15' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{ backgroundImage: "url('https://cellphones.com.vn/media/icons/menu/icon-cps-845.svg')" }}
-                    ></i>
-                    <span>Nhà thông minh</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='15' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{
-                        backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon-cps-30.svg')"
-                      }}
-                    ></i>
-                    <span>Phụ kiện</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='15' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{ backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon_cpu.svg')" }}
-                    ></i>
-                    <span>PC - Màn hình</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='15' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{
-                        backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon-cps-1124.svg')"
-                      }}
-                    ></i>
-                    <span>Tivi</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='15' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{
-                        backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon-cps-tcdm.svg')"
-                      }}
-                    ></i>
-                    <span>Thu cũ</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='15' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{
-                        backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon-cps-29.svg')"
-                      }}
-                    ></i>
-                    <span>Hàng cũ</span>
-                    <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='15' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
-                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
-                      </svg>
-                    </div>
-                  </Link>
-                </li>
-                <li className='label-menu-tree'>
-                  <Link to={`/product?type=dienthoai`} className='label-item'>
-                    <i
-                      className='icons-cate'
-                      style={{
-                        backgroundImage: "url('https://cdn.cellphones.com.vn/media/icons/menu/icon-cps-promotion.svg')"
-                      }}
-                    ></i>
+                  <Link to={`/`} className='label-item'>
                     <span>Khuyến mãi</span>
                     <div data-v-78fbd3bf='' className='icon-right'>
-                      <svg height='15' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
+                      <svg height='{15}' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
+                        <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
+                      </svg>
+                    </div>
+                  </Link>
+                </li>
+                <li className='label-menu-tree'>
+                  <Link to={`/`} className='label-item'>
+                    <span> Tin tức công nghệ</span>
+                    <div data-v-78fbd3bf='' className='icon-right'>
+                      <svg height='{15}' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
                         <path d='M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z'></path>
                       </svg>
                     </div>
@@ -321,10 +181,10 @@ const Home = () => {
         {optionsByCategory.productTypes.map((type: string) => (
           <div className='box-content'>
             <div className='box-title'>
-              <Link to={'/'} className='title'>
-                {type}
+              <Link to={`/product/${type}`} className='title'>
+                {typeDisplayNames[type]}
               </Link>
-              <Link to={'/'} className='title1'>
+              <Link to={`/product/${type}`} className='title1'>
                 Xem tất cả
               </Link>
             </div>

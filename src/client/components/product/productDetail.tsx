@@ -15,24 +15,13 @@ const ProductDetail = () => {
   useEffect(() => {
     const getProduct = async () => {
       const { data } = await listOnePro(id)
-      setPro(data)
+      setPro(data?.data)
       console.log(data)
-      if (data && data.type) {
-        // Giả sử bạn có một hàm để lấy danh sách tất cả sản phẩm
-        const {data } = await getAll();
-        setSimilarpr(data)
-        console.log(data);
-        
+      if (data?.data && data?.data?.type) {
+        const { data } = await getAll()
+        setSimilarpr(data?.data)
+        console.log(data)
       }
-      // biến gọi hàm load 1 cate
-      // const resCate = await detailCategory(data.cateId);
-      // setCate(resCate.data);
-      // console.log( 'id',resCate.data);
-
-      // hàm load dữ liệu của sản phẩm cùng loại
-      // const similarProductRes = await similarProduct(data.cateId)
-      // setSimilarpr(similarProductRes.data)
-      // console.log('sản phẩm', similarProductRes.data)
     }
     getProduct()
   }, [id])
@@ -195,7 +184,8 @@ const ProductDetail = () => {
             </div>
             <div className='w-[1080px] my-[20px]'>
               <div className='product-list'>
-                {similarpr.filter((item) => item.type === pro?.type)
+                {similarpr
+                  .filter((item) => item.type === pro?.type)
                   .filter((item) => item.id !== pro?.id)
                   .map((item, index) => {
                     return (
