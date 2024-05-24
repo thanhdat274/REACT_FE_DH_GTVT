@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+// import { useDispatch } from 'react-redux'
 import { message } from 'antd'
 import { getAll, listOnePro } from '@/api/products'
 import { ProductType } from '@/type/Product'
@@ -11,31 +11,43 @@ const ProductDetail = () => {
 
   const [pro, setPro] = useState<ProductType>()
   const [similarpr, setSimilarpr] = useState<ProductType[]>([])
+  const [carts, setCarts] = useState<ProductType[]>([])
+  const [quantityValue, setQuantityValue] = useState<number>(1)
 
   useEffect(() => {
     const getProduct = async () => {
-      const { data } = await listOnePro(id)
-      setPro(data?.data)
-      console.log(data)
-      if (data?.data && data?.data?.type) {
+      const { data } = await listOnePro(Number(id))
+      setPro(data as ProductType)
+      if (data && data.type) {
+        // Giả sử bạn có một hàm để lấy danh sách tất cả sản phẩm
         const { data } = await getAll()
-        setSimilarpr(data?.data)
+        setSimilarpr(data)
         console.log(data)
       }
     }
     getProduct()
   }, [id])
+  useEffect(() => {
+    const savedCart = JSON.parse(JSON.stringify(localStorage.getItem('cart'))) || []
+    setCarts(JSON.parse(savedCart))
+  }, [])
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(carts))
+  }, [carts])
+  // const dispatch = useDispatch()
 
-  const dispatch = useDispatch()
-
-  const addToCart = (item: any) => {
-    message.success('Thêm vào giỏ hàng thành công')
-
-    item.quantity1 = 1
-    dispatch({
-      type: 'cart/add',
-      payload: item
+  const addToCart = (items: ProductType) => {
+    setCarts((prevCart) => {
+      const productIndex = prevCart.findIndex((item) => item.id === items.id)
+      if (productIndex !== -1) {
+        const updatedCart = [...prevCart]
+        updatedCart[productIndex].quantity += quantityValue
+        return updatedCart
+      } else {
+        return [...prevCart, { ...items, quantity: 1 }]
+      }
     })
+    message.success('Thêm vào giỏ hàng thành công')
   }
   return (
     <div>
@@ -89,14 +101,20 @@ const ProductDetail = () => {
                 <div className='flex'>
                   <div className='text-[#1e1e27] mt-1'>Số lượng:</div>
                   <div className='mx-3 border h-[40px] w-[120px] flex justify-around'>
-                    <input type='number' id='inputValue' defaultValue={1} className='w-10 text-center mx-2' />
+                    <input
+                      type='number'
+                      id='inputValue'
+                      value={quantityValue}
+                      className='w-10 text-center mx-2'
+                      onChange={(e) => setQuantityValue(Number(e.target.value))}
+                    />
                   </div>
                 </div>
                 <div className='mt-7'>
                   <button
                     className='bg-red-500 h-10 w-44 rounded-sm text-white'
                     onClick={() => {
-                      addToCart(pro)
+                      addToCart(pro as ProductType)
                     }}
                   >
                     <i className='fa-solid fa-cart-plus'></i> Thêm vào giỏ hàng
