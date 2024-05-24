@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { message } from 'antd'
 import { getAll, listOnePro } from '@/api/products'
 import { ProductType } from '@/type/Product'
+import { useDispatch } from 'react-redux'
 
 const ProductDetail = () => {
   const { id } = useParams()
@@ -17,16 +18,17 @@ const ProductDetail = () => {
   useEffect(() => {
     const getProduct = async () => {
       const { data } = await listOnePro(Number(id))
-      setPro(data as ProductType)
-      if (data && data.type) {
+      setPro(data?.data as ProductType)
+      if (data?.data && data?.data?.type) {
         // Giả sử bạn có một hàm để lấy danh sách tất cả sản phẩm
         const { data } = await getAll()
-        setSimilarpr(data)
-        console.log(data)
+        setSimilarpr(data?.data)
+        console.log(data?.data)
       }
     }
     getProduct()
   }, [id])
+
   useEffect(() => {
     const savedCart = JSON.parse(JSON.stringify(localStorage.getItem('cart'))) || []
     setCarts(JSON.parse(savedCart))
