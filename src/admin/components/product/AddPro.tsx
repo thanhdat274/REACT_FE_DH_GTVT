@@ -58,17 +58,10 @@ const AddPro: React.FC = () => {
   const [rawHTML, setRawHTML] = useState('')
   const [fileList, setfileList] = useState<UploadFile[] | any>([])
   const [mutiFileList, setMutiFileList] = useState<UploadFile[] | any>([])
-  const [filteredProducts, setFilteredProducts] = useState<{ [key: string]: ProductType[] }>({})
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [brands, setBrands] = useState([])
   const [form] = Form.useForm()
-  useEffect(() => {
-    const filterProductsByType = () => {
-      const categorizedProducts: { [key: string]: ProductType[] } = {}
-      setFilteredProducts(categorizedProducts)
-    }
-    filterProductsByType()
-  }, [])
+
 
   // phần chọn ngành hàng và select ra thương hiệu
   const handleCategoryChange = (value: string) => {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getAll } from '../../api/products'
-import { CateType } from '../../type/category'
 import { ProductType } from '../../type/Product'
 import { Smartphone } from 'lucide-react'
 
@@ -69,7 +68,7 @@ const Home = () => {
               <ul className='menu-tree'>
                 {optionsByCategory.productTypes.map((type: string) => (
                   <li className='label-menu-tree'>
-                    <Link to={`/product?type=${type}`} className='label-item'>
+                    <Link to={`/product/${type}`} className='label-item'>
                       <span> {typeDisplayNames[type]}</span>
                       <div data-v-78fbd3bf='' className='icon-right'>
                         <svg height='{15}' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'>
@@ -182,10 +181,10 @@ const Home = () => {
         {optionsByCategory.productTypes.map((type: string) => (
           <div className='box-content'>
             <div className='box-title'>
-              <Link to={'/'} className='title'>
+              <Link to={`/product/${type}`} className='title'>
                 {typeDisplayNames[type]}
               </Link>
-              <Link to={'/'} className='title1'>
+              <Link to={`/product/${type}`} className='title1'>
                 Xem tất cả
               </Link>
             </div>

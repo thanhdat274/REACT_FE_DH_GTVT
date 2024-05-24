@@ -38,6 +38,7 @@ function App() {
           {/* phàn product */}
           <Route path='products/:id' element={<ProductDetail />} />
         </Route>
+
         {/* phần admin */}
         <Route
           path='/admin'
