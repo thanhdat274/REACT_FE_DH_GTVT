@@ -4,16 +4,17 @@ import { useNavigate } from 'react-router-dom';
 const ThongTinAccount = () => {
   const [auth, setAuth] = useState<any>();
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('userInfo') as string)
   useEffect(() => {
     const getA = () => {
-      setAuth(JSON.parse(localStorage.getItem("user") as string));
-    };
-    getA();
-  }, []);
+      setAuth(user)
+    }
+    getA()
+  }, [user])
   const logout = () => {
     console.log(1);
 
-    localStorage.removeItem("user");
+    localStorage.removeItem('userInfo')
     // setAuth(localStorage.removeItem("user"));
     setAuth(undefined);
     navigate('/')

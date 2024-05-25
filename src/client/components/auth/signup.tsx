@@ -8,8 +8,8 @@ const Signup = () => {
   const onFinish = async (values: any) => {
     console.log('Success:', values)
 
-    const data = await signup(values)
-    if (data?.data?.code == '00') {
+    const { data } = await signup(values)
+    if (data?.code == '00') {
       console.log('data response', data?.data)
       message.success('Đăng kí tài khoản thành công, chuyển sang trang đăng nhập sau 2s')
       setTimeout(() => {

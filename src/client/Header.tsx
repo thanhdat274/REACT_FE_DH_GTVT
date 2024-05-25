@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom'
 
 const Header = () => {
   const [auth, setAuth] = useState<any>()
+  const user = JSON.parse(localStorage.getItem('userInfo') as string)
   useEffect(() => {
     const getA = () => {
-      setAuth(JSON.parse(localStorage.getItem('user') as string))
+      setAuth(user)
     }
     getA()
-  }, [])
+  }, [user])
   return (
     <div className='header-top'>
       <div className='header-container'>
