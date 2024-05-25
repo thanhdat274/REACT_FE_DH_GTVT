@@ -7,20 +7,21 @@ const Signin: React.FC = () => {
   const navigate = useNavigate()
   const onFinish = async (values: any) => {
     console.log('Success:', values)
-    try {
-      const { data } = await signin(values)
-      console.log('data response', data)
+
+    const  {data}  = await signin(values)
+    console.log('data response', data)
+    if (data?.code == '00') {
       if (data) {
-        localStorage.setItem('user', JSON.stringify(data))
+        localStorage.setItem('token', JSON.stringify(data?.data?.token))
+        localStorage.setItem('userInfo', JSON.stringify(data?.data?.user))
         message.success('Đăng nhập tài khoản thành công, chuyển sang trang đăng nhập sau 2s')
         setTimeout(() => {
           navigate('/')
           window.location.reload()
-        }, 2000)
+        },2000)
       }
-    } catch (err) {
-      console.log(err)
-      message.error('Tên tài khoản hoặc mật khẩu không đúng!')
+    } else {
+      message.error(data?.message)
     }
   }
   const onFinishFailed = (errorInfo: any) => {
