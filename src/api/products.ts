@@ -19,6 +19,6 @@ export const addPro = (data: ProductType) => {
     return instance.post(url, data)
 }
 export const editPro = (data: ProductType) => {
-    const url = `/products/${data.id}`
+    const url = `/products/update`
     return instance.put(url, data);
 }

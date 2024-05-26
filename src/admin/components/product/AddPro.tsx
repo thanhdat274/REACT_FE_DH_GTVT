@@ -62,7 +62,6 @@ const AddPro: React.FC = () => {
   const [brands, setBrands] = useState([])
   const [form] = Form.useForm()
 
-
   // phần chọn ngành hàng và select ra thương hiệu
   const handleCategoryChange = (value: string) => {
     setBrands(optionsByCategory[value] || [])
@@ -99,7 +98,6 @@ const AddPro: React.FC = () => {
     const imgLink = await upload(fileList[0])
     const mutiImgLink = await upload(mutiFileList[0])
     const valueAdd = {
-      image: mutiImgLink,
       name: values?.name,
       type: values?.type,
       brand: values?.brand,
@@ -111,11 +109,14 @@ const AddPro: React.FC = () => {
       screenReslution: values?.screenReslution,
       screenSize: values?.screenSize,
       storage: values?.storage,
+      image: mutiImgLink,
       thumbnail: imgLink,
       weight: values?.weight,
       price: values?.price,
       salePrice: values?.salePrice,
-      quantity: values?.quantity
+      quantity: values?.quantity,
+      status: 1,
+      productView: 0
     }
 
     const data = await addPro(valueAdd)
