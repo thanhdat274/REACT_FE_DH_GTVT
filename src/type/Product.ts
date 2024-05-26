@@ -16,5 +16,7 @@ export type ProductType = {
   weight: string,
   price: number,
   salePrice: number,
-  quantity: number
+  quantity: number,
+  status: number,
+  productView: number
 }

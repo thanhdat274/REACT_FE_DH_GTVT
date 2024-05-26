@@ -31,7 +31,9 @@ const ListPro = () => {
       weight: item?.weight,
       price: item?.price,
       salePrice: item?.salePrice,
-      quantity: item?.quantity
+      quantity: item?.quantity,
+      status: item?.status,
+      productView: item?.productView
     }
   })
   const columns: ColumnsType<ProductType> = [
@@ -60,8 +62,8 @@ const ListPro = () => {
     },
     {
       title: 'Hình ảnh',
-      dataIndex: 'image',
-      key: 'image',
+      dataIndex: 'thumbnail',
+      key: 'thumbnail',
       render: (text: string, record: ProductType) => {
         return <Image width={200} src={text} />
       }
@@ -71,6 +73,12 @@ const ListPro = () => {
       dataIndex: 'quantity',
       key: 'quantity',
       render: (value) => numeral(value).format('0,0').replace(/,/g, '.').replace(/\./, ',')
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status',
+      render: (value) => (value === 1 ? 'Hoạt động' : value === 0 ? 'Ẩn' : value)
     },
     {
       title: 'Action',

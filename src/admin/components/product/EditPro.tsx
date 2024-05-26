@@ -21,6 +21,8 @@ const optionsByCategory: any = {
   hangcu: ['Used Phone', 'Used Laptop', 'Used Tablet']
 }
 
+
+
 const EditPro: React.FC = () => {
   const navigate = useNavigate()
   const [rawHTML, setRawHTML] = useState('')
@@ -40,7 +42,8 @@ const EditPro: React.FC = () => {
       setBrands(optionsByCategory[value] || [])
       setSelectedCategory(value)
     }
-    form.setFieldsValue({ brand: undefined })
+    form.setFieldsValue({ brand: undefined });
+  
   }
   //---------------------------------------------------
 
@@ -67,46 +70,86 @@ const EditPro: React.FC = () => {
   }
   //---------------------------------------
 
+
+
   useEffect(() => {
     const getPro = async (id: number) => {
       const { data } = await listOnePro(id)
       console.log(id)
-      console.log(data)
+      console.log('useEffect', data)
       setPro(data?.data)
       if (data?.data?.type) {
         handleCategoryChange(data?.data?.type)
       }
-      form.setFieldsValue(data?.data)
+      form.setFieldsValue(data?.data);
+      // if (data?.data) {
+      //   const convertImages = {
+      //     image: data?.data?.image,
+      //     thumbnail: data?.data?.image,
+      //     url: data?.data?.image
+      //   };
+      //    const convertImagesThumb = {
+      //      image: data?.data?.thumbnail,
+      //      thumbnail: data?.data?.thumbnail,
+      //      url: data?.data?.thumbnail
+      //    }
+      //   setfileList([convertImages]);
+      //   setMutiFileList([convertImagesThumb]);
+      // }
     }
 
-    getPro(id as number)
+    getPro(Number(id))
   }, [id])
 
   const onFinish = async (values: any) => {
     console.log('Success:', values)
-    const file = fileList[0]
-    console.log(file)
+    const imgLink = fileList[0];
+    console.log(imgLink)
+    const mutiImgLink = mutiFileList[0]
+    console.log(mutiImgLink)
 
-    if (file) {
-      values.image = await upload(file)
+    if (imgLink) {
+      values.thumbnail = await upload(imgLink)
+    } else {
+      values.thumbnail = pro?.thumbnail
+    }
+    if (mutiImgLink) {
+      values.image = await upload(mutiImgLink)
+    } else {
+      values.image = pro?.image
+    }
+    if (rawHTML) {
+      values.rawHTML = rawHTML
+    } else {
+      values.rawHTML = pro?.description
     }
     const valueEdit = {
-      _id: id,
+      id: Number(id),
       image: values.image,
-      name: values.name,
-      price: values.price,
-      sale_price: values.sale_price,
-      quantity: values.quantity,
-      desc_img: values.desc_img,
-      desc: values.desc,
-      short_desc: values.short_desc,
-      cateId: values.cateId
+      name: values?.name,
+      type: values?.type,
+      brand: values?.brand,
+      description: values.rawHTML,
+      battery: values?.battery,
+      cpu: values?.cpu,
+      operatingSystem: values?.operatingSystem,
+      ram: values?.ram,
+      screenReslution: values?.screenReslution,
+      screenSize: values?.screenSize,
+      storage: values?.storage,
+      thumbnail: values.thumbnail,
+      weight: values?.weight,
+      price: values?.price,
+      salePrice: values?.salePrice,
+      quantity: values?.quantity,
+      status: values?.status,
+      productView: values?.productView
     }
     try {
-      // const data = await editPro(valueEdit);
+      const data = await editPro(valueEdit)
       message.success('Cập nhật thành công')
       navigate('/admin/products')
-      // console.log(data)
+      console.log(data)
     } catch (err) {
       message.error('Có lỗi xảy ra')
     }
@@ -361,11 +404,7 @@ const EditPro: React.FC = () => {
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Dung lượng pin thiết bị không để trống!' }]}
                 >
-                  <Input
-                    style={{ width: '100%' }}
-                    size='large'
-                    disabled
-                  />
+                  <Input style={{ width: '100%' }} size='large' disabled />
                 </Form.Item>
               </Col>
               <Col span={12}>
