@@ -1,6 +1,7 @@
 // import React from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { ProductType } from '@/type/Product'
+import { getCartService } from '@/api/carts'
 import { ProductType } from '@/type/Product'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -9,18 +10,17 @@ import { Link } from 'react-router-dom'
 // import { formatNumber } from 'src/util/contant.ts'
 
 const Cart = () => {
-  const [carts, setCart] = useState<ProductType[]>([])
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '')
+  const [carts, setCart] = useState<any>([])
   const [priceCarts, setPriceCart] = useState(0)
-  // const { cart, total }: any = useSelector((store) => store);
-  // console.log(total);
-
-  // const dipatch = useDispatch();
   useEffect(() => {
-    const cartLocal = JSON.parse(JSON.stringify(localStorage.getItem('cart'))) || []
-    setCart(JSON.parse(cartLocal))
+    getCartService(userInfo.id).then((result) => {
+      console.log(result)
+      setCart(result.data.data)
+    })
   }, [])
   useEffect(() => {
-    const total = carts.reduce((arr, cur) => arr+ (cur.price*cur.quantity), 0)
+    const total = carts.reduce((arr: any, cur: any) => arr + cur.products.price * cur.quantity, 0)
     setPriceCart(total)
   }, [carts])
   const formatNumber = (number: number) => {
@@ -30,47 +30,29 @@ const Cart = () => {
 
     return decimalPart ? `${integerPart}.${decimalPart}` + 'VND' : integerPart + 'VND'
   }
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(carts))
-  }, [carts])
-  // const dispatch = useDispatch()
-
-  // const addToCart = (items: ProductType) => {
-  //   setCarts((prevCart) => {
-  //     const productIndex = prevCart.findIndex((item) => item.id === items.id)
-  //     if (productIndex !== -1) {
-  //       const updatedCart = [...prevCart]
-  //       updatedCart[productIndex].quantity += quantityValue
-  //       return updatedCart
-  //     } else {
-  //       return [...prevCart, { ...items, quantity: 1 }]
-  //     }
-  //   })
-  //   message.success('Thêm vào giỏ hàng thành công')
-  // }
   const incrementQuantity = (productId: number) => {
-    setCart((prevCart) => {
-      const updatedCart = prevCart.map(item => {
+    setCart((prevCart: any) => {
+      const updatedCart = prevCart.map((item: any) => {
         if (item.id === productId) {
-          return { ...item, quantity: item.quantity + 1 };
+          return { ...item, quantity: item.quantity + 1 }
         }
-        return item;
-      });
-      return updatedCart;
-    });
-  };
+        return item
+      })
+      return updatedCart
+    })
+  }
 
   const decrementQuantity = (productId: number) => {
-    setCart((prevCart) => {
-      const updatedCart = prevCart.map(item => {
+    setCart((prevCart: any) => {
+      const updatedCart = prevCart.map((item: any) => {
         if (item.id === productId && item.quantity > 1) {
-          return { ...item, quantity: item.quantity - 1 };
+          return { ...item, quantity: item.quantity - 1 }
         }
-        return item;
-      });
-      return updatedCart;
-    });
-  };
+        return item
+      })
+      return updatedCart
+    })
+  }
   return (
     <div>
       <main className='mt-[20px]'>
@@ -84,21 +66,27 @@ const Cart = () => {
             <div className='text-[24px]'>Giỏ hàng</div>
           </div>
           <div className='list-cart flex flex-col gap-5'>
-            {carts.map((item) => (
+            {carts.map((item: any) => (
               <div className='flex gap-5 items-center'>
                 <div className='w-52 h-32'>
-                  <img className='w-full h-full' src={item.image} alt={item.name} />
+                  <img className='w-full h-full' src={item.products.thumbnail} alt={item.products.name} />
                 </div>
                 <div>
-                  <p className='m-0'>{item.name}</p>
+                  <p className='m-0'>{item.products.name}</p>
                 </div>
                 <div>
-                  <button className='bg-slate-400 rounded w-5 h-5' onClick={() => decrementQuantity(Number(item?.id))}>
+                  <button
+                    className='bg-slate-400 rounded w-5 h-5'
+                    onClick={() => decrementQuantity(Number(item?.products.id))}
+                  >
                     -
                   </button>
                 </div>
                 <div>
-                  <button className='bg-slate-400 rounded w-5 h-5' onClick={() => incrementQuantity(Number(item?.id))}>
+                  <button
+                    className='bg-slate-400 rounded w-5 h-5'
+                    onClick={() => incrementQuantity(Number(item?.products.id))}
+                  >
                     +
                   </button>
                 </div>
@@ -106,7 +94,7 @@ const Cart = () => {
                   <span>{item.quantity}</span>
                 </div>
                 <div>
-                  <span>{formatNumber(item.price)}</span>
+                  <span>{formatNumber(item.products.price)}</span>
                 </div>
               </div>
             ))}

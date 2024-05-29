@@ -75,8 +75,6 @@ const EditPro: React.FC = () => {
   useEffect(() => {
     const getPro = async (id: number) => {
       const { data } = await listOnePro(id)
-      console.log(id)
-      console.log('useEffect', data)
       setPro(data?.data)
       if (data?.data?.type) {
         handleCategoryChange(data?.data?.type)
@@ -102,11 +100,8 @@ const EditPro: React.FC = () => {
   }, [id])
 
   const onFinish = async (values: any) => {
-    console.log('Success:', values)
     const imgLink = fileList[0];
-    console.log(imgLink)
     const mutiImgLink = mutiFileList[0]
-    console.log(mutiImgLink)
 
     if (imgLink) {
       values.thumbnail = await upload(imgLink)
@@ -149,7 +144,6 @@ const EditPro: React.FC = () => {
       const data = await editPro(valueEdit)
       message.success('Cập nhật thành công')
       navigate('/admin/products')
-      console.log(data)
     } catch (err) {
       message.error('Có lỗi xảy ra')
     }

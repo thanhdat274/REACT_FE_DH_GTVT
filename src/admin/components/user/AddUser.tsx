@@ -16,7 +16,6 @@ const AddUser: React.FC = () => {
   const [fileList, setfileList] = useState<UploadFile[] | any>([]);
 
   const onFinish = async (values: any) => {
-    console.log('Success:', values);
     const imgLink = await upload(fileList[0]);
     const valueAdd = {
       image: imgLink,
@@ -28,12 +27,9 @@ const AddUser: React.FC = () => {
       role: values.role,
     };
     try {
-      const data = await addUser(valueAdd);
-      console.log('data', data);
-
+      const data = await addUser(valueAdd as any);
       message.success('Thêm mới thành công');
       navigate('/admin/user');
-      console.log(data);
     } catch (err) {
       message.error('Có lỗi xảy ra');
     }

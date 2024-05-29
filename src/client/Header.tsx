@@ -5,10 +5,10 @@ const Header = () => {
   const [auth, setAuth] = useState<any>()
   const user = JSON.parse(localStorage.getItem('userInfo') as string)
   useEffect(() => {
-    const getA = () => {
-      setAuth(user)
-    }
-    getA()
+    // const getA = () => {
+    //   setAuth(user)
+    // }
+    // getA()
   }, [user])
   return (
     <div className='header-top'>

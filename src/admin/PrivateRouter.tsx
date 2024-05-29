@@ -4,7 +4,6 @@ import { Modal } from 'antd'
 
 const PrivateRouter = ({ children }: any) => {
   const auth = JSON.parse(localStorage.getItem('user') as string)
-  console.log(auth)
   if (!auth) {
     Modal.error({
       title: 'Chưa đăng nhập tài khoản quản trị!',

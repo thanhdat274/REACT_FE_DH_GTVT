@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Typography, Col, Row, Button, Form, Input, InputNumber, Select, message, UploadFile } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import { PlusSquareOutlined } from '@ant-design/icons'
@@ -11,7 +11,6 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { upload } from '@/api/images'
 import { addPro } from '@/api/products'
-import { ProductType } from '@/type/Product'
 
 const { Option } = Select
 
@@ -94,7 +93,6 @@ const AddPro: React.FC = () => {
   //---------------------------------------
 
   const onFinish = async (values: any) => {
-    console.log('Success:', values)
     const imgLink = await upload(fileList[0])
     const mutiImgLink = await upload(mutiFileList[0])
     const valueAdd = {
@@ -121,7 +119,6 @@ const AddPro: React.FC = () => {
 
     const data = await addPro(valueAdd)
     if (data?.data?.code == '00') {
-      console.log('data response', data?.data)
       message.success('Thêm mới thành công')
       setTimeout(() => {
         navigate('/admin/products')
