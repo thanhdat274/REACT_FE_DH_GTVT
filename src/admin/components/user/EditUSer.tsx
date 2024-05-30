@@ -19,8 +19,6 @@ const EditUser: React.FC = () => {
   useEffect(() => {
     const getUser = async (id: number) => {
       const { data } = await listOneUser(id as number)
-      console.log(id)
-      console.log(data)
       form.setFieldsValue(data)
     }
     // getUser(id);
@@ -35,10 +33,7 @@ const EditUser: React.FC = () => {
   }, [id, form])
 
   const onFinish = async (values: any) => {
-    console.log('Success:', values)
     const file = fileList[0]
-    console.log(file)
-
     if (file) {
       values.image = await upload(file)
     }
@@ -52,13 +47,10 @@ const EditUser: React.FC = () => {
       address: values?.address,
       role: values?.role
     }
-    console.log(valueEdit)
     try {
-      const data = await updateUser(valueEdit)
-      console.log('data', data)
+      await updateUser(valueEdit as any)
       message.success('Cập nhật thành công')
       navigate('/admin/user')
-      console.log(data)
     } catch (err) {
       console.log(err)
       message.error('Có lỗi xảy ra')

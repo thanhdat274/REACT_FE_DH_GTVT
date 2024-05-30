@@ -5,14 +5,14 @@ import { message } from 'antd'
 import { getAll, listOnePro } from '@/api/products'
 import { ProductType } from '@/type/Product'
 import { useDispatch } from 'react-redux'
+import { addCartService } from '@/api/carts'
+import { IAddCart } from '@/type/cart'
 
 const ProductDetail = () => {
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '')
   const { id } = useParams()
-  console.log(id)
-
   const [pro, setPro] = useState<ProductType>()
   const [similarpr, setSimilarpr] = useState<ProductType[]>([])
-  const [carts, setCarts] = useState<ProductType[]>([])
   const [quantityValue, setQuantityValue] = useState<number>(1)
 
   useEffect(() => {
@@ -20,35 +20,20 @@ const ProductDetail = () => {
       const { data } = await listOnePro(Number(id))
       setPro(data?.data as ProductType)
       if (data?.data && data?.data?.type) {
-        // Giả sử bạn có một hàm để lấy danh sách tất cả sản phẩm
         const { data } = await getAll()
         setSimilarpr(data?.data)
-        console.log(data?.data)
       }
     }
     getProduct()
   }, [id])
 
-  useEffect(() => {
-    const savedCart = JSON.parse(JSON.stringify(localStorage.getItem('cart'))) || []
-    setCarts(JSON.parse(savedCart))
-  }, [])
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(carts))
-  }, [carts])
-  // const dispatch = useDispatch()
-
-  const addToCart = (items: ProductType) => {
-    setCarts((prevCart) => {
-      const productIndex = prevCart.findIndex((item) => item.id === items.id)
-      if (productIndex !== -1) {
-        const updatedCart = [...prevCart]
-        updatedCart[productIndex].quantity += quantityValue
-        return updatedCart
-      } else {
-        return [...prevCart, { ...items, quantity: 1 }]
-      }
-    })
+  const addToCart = async (item: ProductType) => {
+    const data: IAddCart = {
+      productId: Number(item.id),
+      quantity: quantityValue,
+      userId: userInfo.id || 0
+    }
+    await addCartService(data)
     message.success('Thêm vào giỏ hàng thành công')
   }
   return (

@@ -25,7 +25,7 @@ const ListUser = () => {
   const columns: ColumnsType<UserType> = [
     {
       title: 'ID',
-      dataIndex: 'key',
+      dataIndex: 'id',
       key: 'id',
     },
     {
@@ -43,7 +43,7 @@ const ListUser = () => {
       title: 'Hình ảnh',
       dataIndex: 'image',
       key: 'image',
-      render: (text: string, record: UserType) => {
+      render: (text: string) => {
         return <Image width={100} src={text} />;
       },
     },
@@ -56,6 +56,7 @@ const ListUser = () => {
     {
       title: 'Action',
       key: 'action',
+      dataIndex: "action",
       render: (record: UserType) => (
         <Space size="middle">
           <Link to={`${record.id}/edit`}>
@@ -68,7 +69,7 @@ const ListUser = () => {
             <DeleteOutlined
               style={{ color: 'red' }}
               onClick={() => {
-                onDelete(record.id);
+                onDelete(record.id as number);
               }}
             />
           </button>
@@ -82,7 +83,6 @@ const ListUser = () => {
       try {
         const data = await listUser();
         setUser(data.data);
-        console.log(data.data);
       } catch (err) {
         console.log(err);
       }
@@ -91,8 +91,6 @@ const ListUser = () => {
   }, []);
 
   const onDelete = async (id: number) => {
-    console.log(id);
-
     Modal.confirm({
       title: 'Bạn có muốn xóa không?',
       onOk: async () => {
@@ -103,7 +101,6 @@ const ListUser = () => {
         message.success('Xóa thành công');
       },
     });
-    console.log();
   };
   return (
     <>

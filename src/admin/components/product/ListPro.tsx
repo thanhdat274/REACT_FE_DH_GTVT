@@ -109,7 +109,6 @@ const ListPro = () => {
       try {
         const { data } = await getAll()
         setPro(data?.data)
-        console.log(data?.data)
       } catch (err) {
         console.log(err)
       }
@@ -118,8 +117,6 @@ const ListPro = () => {
   }, [])
 
   const onDelete = async (id: number) => {
-    console.log(id)
-
     Modal.confirm({
       title: 'Bạn có muốn xóa không?',
       onOk: async () => {
@@ -130,7 +127,6 @@ const ListPro = () => {
         message.success('Xóa thành công')
       }
     })
-    console.log()
   }
   return (
     <>
