@@ -1,8 +1,9 @@
 // import React from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { ProductType } from '@/type/Product'
-import { getCartService } from '@/api/carts'
-import { ProductType } from '@/type/Product'
+import { deleteCartService, getCartService, updateCartService } from '@/api/carts'
+import { IAddCart } from '@/type/cart'
+// import { ProductType } from '@/type/Product'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 // import { formatNumber } from ''
@@ -13,11 +14,13 @@ const Cart = () => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || '')
   const [carts, setCart] = useState<any>([])
   const [priceCarts, setPriceCart] = useState(0)
-  useEffect(() => {
-    getCartService(userInfo.id).then((result) => {
-      console.log(result)
+  const getCart = async () => {
+    await getCartService(userInfo.id).then((result) => {
       setCart(result.data.data)
     })
+  }
+  useEffect(() => {
+    getCart()
   }, [])
   useEffect(() => {
     const total = carts.reduce((arr: any, cur: any) => arr + cur.products.price * cur.quantity, 0)
@@ -30,28 +33,27 @@ const Cart = () => {
 
     return decimalPart ? `${integerPart}.${decimalPart}` + 'VND' : integerPart + 'VND'
   }
-  const incrementQuantity = (productId: number) => {
-    setCart((prevCart: any) => {
-      const updatedCart = prevCart.map((item: any) => {
-        if (item.id === productId) {
-          return { ...item, quantity: item.quantity + 1 }
-        }
-        return item
-      })
-      return updatedCart
-    })
+  const incrementQuantity = async (product: any) => {
+    const data = {
+      id: product.id,
+      quantity: product.quantity + 1
+    }
+    await updateCartService(data)
+    getCart()
   }
 
-  const decrementQuantity = (productId: number) => {
-    setCart((prevCart: any) => {
-      const updatedCart = prevCart.map((item: any) => {
-        if (item.id === productId && item.quantity > 1) {
-          return { ...item, quantity: item.quantity - 1 }
-        }
-        return item
-      })
-      return updatedCart
-    })
+  const decrementQuantity = async (product: any) => {
+    const data = {
+      id: product.id,
+      quantity: product.quantity -1
+    }
+    if (product.quantity == 1) {
+      await deleteCartService(product.id)
+      // return
+    } else {
+      await updateCartService(data)
+    }
+    getCart()
   }
   return (
     <div>
@@ -75,18 +77,12 @@ const Cart = () => {
                   <p className='m-0'>{item.products.name}</p>
                 </div>
                 <div>
-                  <button
-                    className='bg-slate-400 rounded w-5 h-5'
-                    onClick={() => decrementQuantity(Number(item?.products.id))}
-                  >
+                  <button className='bg-slate-400 rounded w-5 h-5' onClick={() => decrementQuantity(item)}>
                     -
                   </button>
                 </div>
                 <div>
-                  <button
-                    className='bg-slate-400 rounded w-5 h-5'
-                    onClick={() => incrementQuantity(Number(item?.products.id))}
-                  >
+                  <button className='bg-slate-400 rounded w-5 h-5' onClick={() => incrementQuantity(item)}>
                     +
                   </button>
                 </div>
