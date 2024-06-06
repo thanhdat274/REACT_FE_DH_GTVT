@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getAll } from '../../api/products'
 import { ProductType } from '../../type/Product'
-import { Smartphone } from 'lucide-react'
 
 const optionsByCategory: any = {
   productTypes: [

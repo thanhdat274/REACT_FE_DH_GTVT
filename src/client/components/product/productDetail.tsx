@@ -7,6 +7,7 @@ import { ProductType } from '@/type/Product'
 import { useDispatch } from 'react-redux'
 import { addCartService } from '@/api/carts'
 import { IAddCart } from '@/type/cart'
+import { Minus, Plus } from 'lucide-react'
 
 const ProductDetail = () => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || '')
@@ -14,6 +15,14 @@ const ProductDetail = () => {
   const [pro, setPro] = useState<ProductType>()
   const [similarpr, setSimilarpr] = useState<ProductType[]>([])
   const [quantityValue, setQuantityValue] = useState<number>(1)
+
+   const handleIncrease = () => {
+     setQuantityValue((prevValue) => prevValue + 1)
+   }
+
+   const handleDecrease = () => {
+     setQuantityValue((prevValue) => (prevValue > 1 ? prevValue - 1 : 1)) // Đảm bảo số lượng không nhỏ hơn 1
+   }
 
   useEffect(() => {
     const getProduct = async () => {
@@ -85,16 +94,16 @@ const ProductDetail = () => {
                     })}
                   </span>
                 </div>
-                <div className='flex'>
+                <div className='flex items-center'>
                   <div className='text-[#1e1e27] mt-1'>Số lượng:</div>
-                  <div className='mx-3 border h-[40px] w-[120px] flex justify-around'>
-                    <input
-                      type='number'
-                      id='inputValue'
-                      value={quantityValue}
-                      className='w-10 text-center mx-2'
-                      onChange={(e) => setQuantityValue(Number(e.target.value))}
-                    />
+                  <div className='mx-3 border h-[40px] w-[120px] flex items-center justify-around'>
+                    <button onClick={handleDecrease} className='p-1'>
+                      <Minus size={16} />
+                    </button>
+                    <span className='w-10 text-center '>{quantityValue}</span>
+                    <button onClick={handleIncrease} className='p-1'>
+                      <Plus size={16} />
+                    </button>
                   </div>
                 </div>
                 <div className='mt-7'>
