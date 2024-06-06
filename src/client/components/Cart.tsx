@@ -3,6 +3,7 @@
 // import { ProductType } from '@/type/Product'
 import { deleteCartService, getCartService, updateCartService } from '@/api/carts'
 import { IAddCart } from '@/type/cart'
+import { Minus, Plus } from 'lucide-react'
 // import { ProductType } from '@/type/Product'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -31,7 +32,7 @@ const Cart = () => {
 
     integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 
-    return decimalPart ? `${integerPart}.${decimalPart}` + 'VND' : integerPart + 'VND'
+    return decimalPart ? `${integerPart}.${decimalPart}` + ' đ' : integerPart + ' đ'
   }
   const incrementQuantity = async (product: any) => {
     const data = {
@@ -67,33 +68,71 @@ const Cart = () => {
             </div>
             <div className='text-[24px]'>Giỏ hàng</div>
           </div>
-          <div className='list-cart flex flex-col gap-5'>
+          {/* <div className='list-cart flex flex-col gap-5'>
             {carts.map((item: any) => (
               <div className='flex gap-5 items-center'>
                 <div className='w-52 h-32'>
-                  <img className='w-full h-full' src={item.products.thumbnail} alt={item.products.name} />
+                  <img className='w-full h-full' src={item?.products?.thumbnail} alt={item?.products?.name} />
                 </div>
+                <Link to={`/products/${item?.products?.id}`}>
+                  <p className='m-0'>{item?.products?.name}</p>
+                </Link>
                 <div>
-                  <p className='m-0'>{item.products.name}</p>
-                </div>
-                <div>
-                  <button className='bg-slate-400 rounded w-5 h-5' onClick={() => decrementQuantity(item)}>
-                    -
+                  <button className='rounded w-5 h-5' onClick={() => decrementQuantity(item)}>
+                    <Minus size={16} />
                   </button>
                 </div>
                 <div>
-                  <button className='bg-slate-400 rounded w-5 h-5' onClick={() => incrementQuantity(item)}>
-                    +
+                  <span>{item?.quantity}</span>
+                </div>
+                <div>
+                  <button className='rounded w-5 h-5' onClick={() => incrementQuantity(item)}>
+                    <Plus size={16} />
                   </button>
                 </div>
                 <div>
-                  <span>{item.quantity}</span>
-                </div>
-                <div>
-                  <span>{formatNumber(item.products.price)}</span>
+                  <span>{formatNumber(item?.products?.price)}</span>
                 </div>
               </div>
             ))}
+          </div> */}
+          <div className='list-cart'>
+            <table className='table-auto w-full border-collapse'>
+              <tbody>
+                {carts.map((item: any) => (
+                  <tr key={item?.products?.id} className='border-b'>
+                    <td className='w-32 px-2 py-2'>
+                      <div className='w-28 h-20'>
+                        <img
+                          className='w-full h-full object-cover'
+                          src={item?.products?.thumbnail}
+                          alt={item?.products?.name}
+                        />
+                      </div>
+                    </td>
+                    <td className='w-48 px-2 py-2'>
+                      <Link to={`/products/${item?.products?.id}`}>
+                        <p className='m-0 text-sm'>{item?.products?.name}</p>
+                      </Link>
+                    </td>
+                    <td className='w-32 px-2 py-2 text-center'>
+                      <div className='flex items-center justify-center'>
+                        <button className='rounded w-5 h-5' onClick={() => decrementQuantity(item)}>
+                          <Minus size={16} />
+                        </button>
+                        <span className='mx-2'>{item?.quantity}</span>
+                        <button className='rounded w-5 h-5' onClick={() => incrementQuantity(item)}>
+                          <Plus size={16} />
+                        </button>
+                      </div>
+                    </td>
+                    <td className='px-2 py-2 text-right'>
+                      <span>{formatNumber(item?.products?.price)}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           <div className='total'>
             <div className='font-semibold'>Tổng tiền tạm tính: </div>
