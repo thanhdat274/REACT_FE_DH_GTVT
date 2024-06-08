@@ -2,23 +2,23 @@ import instance from "./instance";
 import { UserType } from '../type/user';
 
 export const listUser = () => {
-    const url = '/user'
+    const url = '/users'
     return instance.get(url);
 }
 export const listOneUser = (id: number) => {
-    const url = `/user/${id}`
+    const url = `/users/detail/${id}`
     return instance.get(url);
 }
 export const deleteUser = (id: number) => {
-    const url = `/user/${id}`
+    const url = `/users/${id}`
     return instance.delete(url)
 }
 export const addUser = (use: UserType) => {
-    const url = '/user/add'
+    const url = '/users/add'
     return instance.post(url, use);
 }
 export const updateUser = (use: UserType) => {
-    const url = `/user/${use.id}`
+    const url = `/users/${use.id}`
     return instance.put(url, use);
 }
 

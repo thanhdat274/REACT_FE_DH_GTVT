@@ -13,7 +13,7 @@ export const updateCartService = (data: any) => {
     const url = `/carts/update`
     return instance.put(url,data)
 }
-export const deleteCartService = (id: string) => {
+export const deleteCartService = (id: number) => {
     const url = `/carts/delete/${id}`
     return instance.delete(url)
 }

@@ -5,11 +5,8 @@ const Header = () => {
   const [auth, setAuth] = useState<any>()
   const user = JSON.parse(localStorage.getItem('userInfo') as string)
   useEffect(() => {
-    // const getA = () => {
-    //   setAuth(user)
-    // }
-    // getA()
-  }, [user])
+    setAuth(user)
+  }, [])
   return (
     <div className='header-top'>
       <div className='header-container'>
@@ -80,7 +77,7 @@ const Header = () => {
             </div>
           </Link>
           {auth && auth ? (
-            <Link to='/smember' className='header-item'>
+            <Link to='/thong-tin' className='header-item'>
               <div className='about__box-icon'>
                 <i className='fa-solid fa-circle-user' style={{ textAlign: 'center' }} />
                 <div className='about__box-content'>
