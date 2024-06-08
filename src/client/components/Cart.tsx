@@ -1,61 +1,92 @@
-// import React from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { ProductType } from '@/type/Product'
 import { deleteCartService, getCartService, updateCartService } from '@/api/carts'
-import { IAddCart } from '@/type/cart'
-import { Minus, Plus } from 'lucide-react'
-// import { ProductType } from '@/type/Product'
-import { useEffect, useState } from 'react'
+import { message, Modal } from 'antd'
+import { Minus, Plus, Trash } from 'lucide-react'
+import { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-// import { formatNumber } from ''
-// import { formatNumber } from '@/util/contant'
-// import { formatNumber } from 'src/util/contant.ts'
+
+interface Product {
+  id: number
+  name: string
+  price: number
+  thumbnail: string
+}
+
+interface CartItem {
+  id: number
+  products: Product
+  quantity: number
+}
 
 const Cart = () => {
-  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '')
-  const [carts, setCart] = useState<any>([])
-  const [priceCarts, setPriceCart] = useState(0)
-  const getCart = async () => {
-    await getCartService(userInfo.id).then((result) => {
-      setCart(result.data.data)
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
+  const [carts, setCarts] = useState<CartItem[]>([])
+  const [priceCarts, setPriceCarts] = useState(0)
+  const [checkboxStates, setCheckboxStates] = useState<{ [key: number]: boolean }>({})
+
+  const fetchData = useCallback(async () => {
+    const result = await getCartService(userInfo.id)
+    setCarts(result.data.data)
+    setCheckboxStates((prevState) => {
+      const newCheckboxStates: { [key: number]: boolean } = {}
+      result.data.data.forEach((item: CartItem) => {
+        newCheckboxStates[item.products.id] = prevState[item.products.id] || false
+      })
+      return newCheckboxStates
     })
-  }
+  }, [userInfo.id])
+
   useEffect(() => {
-    getCart()
-  }, [])
+    fetchData()
+  }, [fetchData])
+
   useEffect(() => {
-    const total = carts.reduce((arr: any, cur: any) => arr + cur.products.price * cur.quantity, 0)
-    setPriceCart(total)
-  }, [carts])
+    const total = carts.reduce((total, item) => {
+      return checkboxStates[item.products.id] ? total + item.products.price * item.quantity : total
+    }, 0)
+    setPriceCarts(total)
+  }, [carts, checkboxStates])
+
   const formatNumber = (number: number) => {
-    let [integerPart, decimalPart] = number.toString().split('.')
-
-    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-
-    return decimalPart ? `${integerPart}.${decimalPart}` + ' đ' : integerPart + ' đ'
-  }
-  const incrementQuantity = async (product: any) => {
-    const data = {
-      id: product.id,
-      quantity: product.quantity + 1
-    }
-    await updateCartService(data)
-    getCart()
+    return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
   }
 
-  const decrementQuantity = async (product: any) => {
-    const data = {
-      id: product.id,
-      quantity: product.quantity -1
-    }
-    if (product.quantity == 1) {
-      await deleteCartService(product.id)
-      // return
+  const updateQuantity = async (item: CartItem, quantity: number) => {
+    const data = { id: item.id, quantity }
+    if (quantity === 0) {
+      Modal.confirm({
+        title: 'Bạn có muốn xóa không?',
+        onOk: async () => {
+          await deleteCartService(item.id)
+          fetchData()
+          message.success('Xóa thành công')
+        }
+      })
     } else {
       await updateCartService(data)
+      fetchData()
     }
-    getCart()
   }
+
+  const removeItem = async (item: CartItem) => {
+    Modal.confirm({
+      title: 'Bạn có muốn xóa không?',
+      onOk: async () => {
+        await deleteCartService(item.id)
+        fetchData()
+        message.success('Xóa thành công')
+      }
+    })
+  }
+
+  const toggleCheckbox = (productId: number) => {
+    setCheckboxStates((prevState) => ({
+      ...prevState,
+      [productId]: !prevState[productId]
+    }))
+  }
+
+  const isPlaceOrderValid = Object.values(checkboxStates).some(Boolean)
+
   return (
     <div>
       <main className='mt-[20px]'>
@@ -68,85 +99,96 @@ const Cart = () => {
             </div>
             <div className='text-[24px]'>Giỏ hàng</div>
           </div>
-          {/* <div className='list-cart flex flex-col gap-5'>
-            {carts.map((item: any) => (
-              <div className='flex gap-5 items-center'>
-                <div className='w-52 h-32'>
-                  <img className='w-full h-full' src={item?.products?.thumbnail} alt={item?.products?.name} />
-                </div>
-                <Link to={`/products/${item?.products?.id}`}>
-                  <p className='m-0'>{item?.products?.name}</p>
-                </Link>
-                <div>
-                  <button className='rounded w-5 h-5' onClick={() => decrementQuantity(item)}>
-                    <Minus size={16} />
-                  </button>
-                </div>
-                <div>
-                  <span>{item?.quantity}</span>
-                </div>
-                <div>
-                  <button className='rounded w-5 h-5' onClick={() => incrementQuantity(item)}>
-                    <Plus size={16} />
-                  </button>
-                </div>
-                <div>
-                  <span>{formatNumber(item?.products?.price)}</span>
-                </div>
-              </div>
-            ))}
-          </div> */}
           <div className='list-cart'>
-            <table className='table-auto w-full border-collapse'>
-              <tbody>
-                {carts.map((item: any) => (
-                  <tr key={item?.products?.id} className='border-b'>
-                    <td className='w-32 px-2 py-2'>
-                      <div className='w-28 h-20'>
-                        <img
-                          className='w-full h-full object-cover'
-                          src={item?.products?.thumbnail}
-                          alt={item?.products?.name}
+            {carts.length > 0 ? (
+              <table className='table-auto w-full border-collapse'>
+                <tbody>
+                  {carts.map((item) => (
+                    <tr key={item.products.id} className='border-b'>
+                      <td className='px-2 py-2 text-right'>
+                        <input
+                          type='checkbox'
+                          checked={checkboxStates[item.products.id] || false}
+                          onChange={() => toggleCheckbox(item.products.id)}
                         />
-                      </div>
-                    </td>
-                    <td className='w-48 px-2 py-2'>
-                      <Link to={`/products/${item?.products?.id}`}>
-                        <p className='m-0 text-sm'>{item?.products?.name}</p>
-                      </Link>
-                    </td>
-                    <td className='w-32 px-2 py-2 text-center'>
-                      <div className='flex items-center justify-center'>
-                        <button className='rounded w-5 h-5' onClick={() => decrementQuantity(item)}>
-                          <Minus size={16} />
+                      </td>
+                      <td className='w-32 px-2 py-2'>
+                        <div className='w-28 h-20'>
+                          <img
+                            className='w-full h-full object-cover'
+                            src={item.products.thumbnail}
+                            alt={item.products.name}
+                          />
+                        </div>
+                      </td>
+                      <td className='w-48 px-2 py-2'>
+                        <Link to={`/products/${item.products.id}`}>
+                          <p className='m-0 text-sm'>{item.products.name}</p>
+                        </Link>
+                      </td>
+                      <td className='w-32 px-2 py-2 text-center'>
+                        <div className='flex items-center justify-center'>
+                          <button className='rounded w-5 h-5' onClick={() => updateQuantity(item, item.quantity - 1)}>
+                            <Minus size={16} />
+                          </button>
+                          <span className='mx-2'>{item.quantity}</span>
+                          <button className='rounded w-5 h-5' onClick={() => updateQuantity(item, item.quantity + 1)}>
+                            <Plus size={16} />
+                          </button>
+                        </div>
+                      </td>
+                      <td className='px-2 py-2 text-right'>
+                        <span>{formatNumber(item.products.price)}</span>
+                      </td>
+                      <td className='px-2 py-2 text-right'>
+                        <button className='rounded w-5 h-5' onClick={() => removeItem(item)}>
+                          <Trash size={16} />
                         </button>
-                        <span className='mx-2'>{item?.quantity}</span>
-                        <button className='rounded w-5 h-5' onClick={() => incrementQuantity(item)}>
-                          <Plus size={16} />
-                        </button>
-                      </div>
-                    </td>
-                    <td className='px-2 py-2 text-right'>
-                      <span>{formatNumber(item?.products?.price)}</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className='total'>
-            <div className='font-semibold'>Tổng tiền tạm tính: </div>
-            <div className='total-text'>{formatNumber(priceCarts)}</div>
-          </div>
-          <div className='uppercase'>
-            <button className='w-[600px] h-[50px] bg-[#d70018] text-white mb-[20px] uppercase font-semibold  rounded-[10px]'>
-              Tiến hành đặt hàng
-            </button>
-            <Link to='/'>
-              <div className='max-w-[600px] h-[50px] border-[1px] border-red-500 text-red-500 uppercase font-semibold hover:bg-[#dc3545] hover:text-white rounded-[10px] flex justify-center items-center'>
-                Chọn thêm sản phẩm khác
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className='flex justify-center flex-col items-center'>
+                <p>Giỏ hàng của bạn đang trống.</p>
+                <p>Hãy chọn thêm sản phẩm để mua sắm nhé.</p>
               </div>
-            </Link>
+            )}
+          </div>
+          {carts.length > 0 && isPlaceOrderValid && (
+            <div className='total'>
+              <div className='font-semibold'>Tổng tiền tạm tính: </div>
+              <div className='total-text'>{formatNumber(priceCarts)}</div>
+            </div>
+          )}
+          <div className='uppercase'>
+            {carts.length > 0 ? (
+              <>
+                <Link
+                  to='/orders/add'
+                  state={{ carts: carts.filter((item) => checkboxStates[item.products.id]), priceCarts }}
+                  onClick={(e) => !isPlaceOrderValid && e.preventDefault()}
+                >
+                  <div
+                    className={`max-w-[600px] h-[50px] border-[1px] uppercase font-semibold bg-[#dc3545] text-white rounded-[10px] flex justify-center items-center mb-4 ${isPlaceOrderValid ? '' : 'pointer-events-none opacity-50'}`}
+                  >
+                    Tiến hành đặt hàng
+                  </div>
+                </Link>
+                <Link to='/'>
+                  <div className='max-w-[600px] h-[50px] border-[1px] uppercase font-semibold bg-[#dc3545] text-white rounded-[10px] flex justify-center items-center'>
+                    Chọn thêm sản phẩm khác
+                  </div>
+                </Link>
+              </>
+            ) : (
+              <Link to='/'>
+                <div className='max-w-[600px] h-[50px] border-[1px] uppercase font-semibold bg-[#dc3545] text-white rounded-[10px] flex justify-center items-center'>
+                  Quay lại trang chủ
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       </main>

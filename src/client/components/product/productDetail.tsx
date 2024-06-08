@@ -10,19 +10,20 @@ import { IAddCart } from '@/type/cart'
 import { Minus, Plus } from 'lucide-react'
 
 const ProductDetail = () => {
-  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '')
+  const userInfoString = localStorage.getItem('userInfo')
+  const userInfo = userInfoString ? JSON.parse(userInfoString) : null
   const { id } = useParams()
   const [pro, setPro] = useState<ProductType>()
   const [similarpr, setSimilarpr] = useState<ProductType[]>([])
   const [quantityValue, setQuantityValue] = useState<number>(1)
 
-   const handleIncrease = () => {
-     setQuantityValue((prevValue) => prevValue + 1)
-   }
+  const handleIncrease = () => {
+    setQuantityValue((prevValue) => prevValue + 1)
+  }
 
-   const handleDecrease = () => {
-     setQuantityValue((prevValue) => (prevValue > 1 ? prevValue - 1 : 1)) // Đảm bảo số lượng không nhỏ hơn 1
-   }
+  const handleDecrease = () => {
+    setQuantityValue((prevValue) => (prevValue > 1 ? prevValue - 1 : 1)) // Đảm bảo số lượng không nhỏ hơn 1
+  }
 
   useEffect(() => {
     const getProduct = async () => {
@@ -37,6 +38,10 @@ const ProductDetail = () => {
   }, [id])
 
   const addToCart = async (item: ProductType) => {
+    if (!userInfo) {
+      message.error('Bạn cần đăng nhập để thêm vào giỏ hàng')
+      return
+    }
     const data: IAddCart = {
       productId: Number(item.id),
       quantity: quantityValue,

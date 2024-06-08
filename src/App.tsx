@@ -17,6 +17,9 @@ import PrivateRouter from './admin/PrivateRouter'
 import Cart from './client/components/Cart'
 import ProductList from './client/components/product/ProductList'
 import ThongTinAccount from './client/components/thong-tin/thong-tin'
+import ListOrders from './admin/components/orders/ListOrders'
+import AddOrders from './client/components/orders/AddOrders'
+import OrderDetail from './admin/components/orders/OrderDetail'
 
 function App() {
   return (
@@ -30,8 +33,12 @@ function App() {
           <Route path='signup' element={<Signup />} />
           {/* phần cart */}
           <Route path='cart' element={<Cart />} />
+          <Route path='orders'>
+            <Route path='add' element={<AddOrders />} />
+            <Route path='detail/:id' element={<OrderDetail />} />
+          </Route>
           {/* phần quản lý thông tin cá nhân */}
-          <Route path='smember' element={<ThongTinAccount />} />
+          <Route path='thong-tin' element={<ThongTinAccount />} />
 
           {/* phàn sản phảm theo danh mục */}
           <Route path='product/:type' element={<ProductList />} />
@@ -60,6 +67,11 @@ function App() {
             <Route index element={<ListUser />} />
             <Route path='add' element={<AddUser />} />
             <Route path=':id/edit' element={<EditUSer />} />
+          </Route>
+          <Route path='orders'>
+            <Route index element={<ListOrders />} />
+            <Route path='add' element={<AddOrders />} />
+            <Route path='detail/:id' element={<OrderDetail />} />
           </Route>
         </Route>
       </Routes>
