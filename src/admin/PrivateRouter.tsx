@@ -11,7 +11,7 @@ const PrivateRouter = ({ children }: any) => {
     })
     return <Navigate to='/signin' />
   }
-  if (auth?.user?.roleId === 0) {
+  if (auth?.roleId === 1) {
     Modal.error({
       title: 'Tài khoản không được phân quyền quản trị',
       content: 'Vui lòng đăng nhập bằng tài khoản admin để vào !'

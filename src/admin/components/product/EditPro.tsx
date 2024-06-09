@@ -21,8 +21,6 @@ const optionsByCategory: any = {
   hangcu: ['Used Phone', 'Used Laptop', 'Used Tablet']
 }
 
-
-
 const EditPro: React.FC = () => {
   const navigate = useNavigate()
   const [rawHTML, setRawHTML] = useState('')
@@ -42,8 +40,7 @@ const EditPro: React.FC = () => {
       setBrands(optionsByCategory[value] || [])
       setSelectedCategory(value)
     }
-    form.setFieldsValue({ brand: undefined });
-  
+    form.setFieldsValue({ brand: undefined })
   }
   //---------------------------------------------------
 
@@ -70,8 +67,6 @@ const EditPro: React.FC = () => {
   }
   //---------------------------------------
 
-
-
   useEffect(() => {
     const getPro = async (id: number) => {
       const { data } = await listOnePro(id)
@@ -79,7 +74,7 @@ const EditPro: React.FC = () => {
       if (data?.data?.type) {
         handleCategoryChange(data?.data?.type)
       }
-      form.setFieldsValue(data?.data);
+      form.setFieldsValue(data?.data)
       // if (data?.data) {
       //   const convertImages = {
       //     image: data?.data?.image,
@@ -100,7 +95,7 @@ const EditPro: React.FC = () => {
   }, [id])
 
   const onFinish = async (values: any) => {
-    const imgLink = fileList[0];
+    const imgLink = fileList[0]
     const mutiImgLink = mutiFileList[0]
 
     if (imgLink) {
@@ -173,7 +168,7 @@ const EditPro: React.FC = () => {
                     beforeUpload={() => {
                       return false
                     }}
-                    accept='image/png, image/jpg, image/jpeg, image/gif'
+                    accept='image/png, image/jpg, image/jpeg, image/gif, image/webp'
                     onChange={handleChangeThumbnail}
                     onPreview={onPreview}
                     fileList={fileList}
@@ -198,7 +193,7 @@ const EditPro: React.FC = () => {
                     beforeUpload={() => {
                       return false
                     }}
-                    accept='image/png, image/jpg, image/jpeg, image/gif'
+                    accept='image/png, image/jpg, image/jpeg, image/gif, image/webp'
                     onChange={handleChangeImage}
                     onPreview={onPreview}
                     fileList={mutiFileList}

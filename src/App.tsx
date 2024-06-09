@@ -50,9 +50,9 @@ function App() {
         <Route
           path='/admin'
           element={
-            // <PrivateRouter>
-            <AdminLayout />
-            // </PrivateRouter>
+            <PrivateRouter>
+              <AdminLayout />
+            </PrivateRouter>
           }
         >
           <Route index element={<Dashboard />} />

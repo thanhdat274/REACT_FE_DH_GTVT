@@ -42,7 +42,7 @@ const typeDisplayNames: { [key: string]: string } = {
 }
 const optionsByCategory: any = {
   dienthoai: ['Apple', 'Samsung', 'Xiaomi', 'Oppo', 'Realme', 'Nokia', 'Oneplus', 'Asus'],
-  laptop: ['Dell', 'HP', 'Lenovo'],
+  laptop: ['Dell', 'HP', 'Lenovo', 'Apple'],
   tablet: ['iPad', 'Samsung', 'Huawei'],
   amthanh: ['Sony', 'JBL', 'Bose'],
   dongho: ['Rolex', 'Casio', 'Omega'],
@@ -153,7 +153,7 @@ const AddPro: React.FC = () => {
                     beforeUpload={() => {
                       return false
                     }}
-                    accept='image/png, image/jpg, image/jpeg, image/gif'
+                    accept='image/png, image/jpg, image/jpeg, image/gif, image/webp'
                     onChange={handleChangeThumbnail}
                     onPreview={onPreview}
                     fileList={fileList}
@@ -178,7 +178,7 @@ const AddPro: React.FC = () => {
                     beforeUpload={() => {
                       return false
                     }}
-                    accept='image/png, image/jpg, image/jpeg, image/gif'
+                    accept='image/png, image/jpg, image/jpeg, image/gif, image/webp'
                     onChange={handleChangeImage}
                     onPreview={onPreview}
                     fileList={mutiFileList}
@@ -232,7 +232,7 @@ const AddPro: React.FC = () => {
                     { required: true, message: 'Giá khuyến mại sản phẩm không để trống!' },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
-                        if (!value || getFieldValue('price') <= value) {
+                        if (!value || getFieldValue('price') < value) {
                           return Promise.reject(new Error('Giá khuyến mại phải nhỏ hơn giá gốc!'))
                         } else {
                           return Promise.resolve()

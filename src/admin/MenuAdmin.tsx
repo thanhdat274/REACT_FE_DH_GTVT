@@ -35,11 +35,6 @@ const MenuAdmin: React.FC = () => (
           Danh sách đơn hàng
         </NavLink>
       </Menu.Item>
-      <Menu.Item key='7'>
-        <NavLink className='' aria-current='page' to='/admin/orders/add'>
-          Thêm mới đơn hàng
-        </NavLink>
-      </Menu.Item>
     </SubMenu>
     <SubMenu key='sub5' icon={<AppstoreOutlined />} title='Quản lí user'>
       <Menu.Item key='2'>
@@ -47,13 +42,13 @@ const MenuAdmin: React.FC = () => (
           Danh sách user
         </NavLink>
       </Menu.Item>
-      <Menu.Item key='3'>
+      {/* <Menu.Item key='3'>
         <NavLink className='' aria-current='page' to='/admin/user/add'>
           Thêm mới user
         </NavLink>
-      </Menu.Item>
+      </Menu.Item> */}
     </SubMenu>
-    <SubMenu key='sub6' icon={<AppstoreOutlined />} title='Quản lí slider'>
+    {/* <SubMenu key='sub6' icon={<AppstoreOutlined />} title='Quản lí slider'>
       <Menu.Item key='10'>
         <NavLink className='' aria-current='page' to='/admin/sliders'>
           Danh sách slider
@@ -64,7 +59,7 @@ const MenuAdmin: React.FC = () => (
           Thêm mới slider
         </NavLink>
       </Menu.Item>
-    </SubMenu>
+    </SubMenu> */}
   </Menu>
 )
 

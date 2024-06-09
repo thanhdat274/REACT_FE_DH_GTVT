@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-// import { useDispatch } from 'react-redux'
 import { message } from 'antd'
 import { getAll, listOnePro } from '@/api/products'
 import { ProductType } from '@/type/Product'
-import { useDispatch } from 'react-redux'
 import { addCartService } from '@/api/carts'
 import { IAddCart } from '@/type/cart'
 import { Minus, Plus } from 'lucide-react'
+import numeral from 'numeral'
 
+const typeDisplayNames: { [key: string]: string } = {
+  dienthoai: 'Điện thoại',
+  laptop: 'Laptop',
+  tablet: 'Máy tính bảng',
+  amthanh: 'Âm thanh',
+  dongho: 'Đồng hồ',
+  nhathongminh: 'Nhà thông minh',
+  phukien: 'Phụ kiện',
+  pc_manhinh: 'PC-Màn hình',
+  tivi: 'Tivi',
+  hangcu: 'Hàng cũ'
+}
 const ProductDetail = () => {
   const userInfoString = localStorage.getItem('userInfo')
   const userInfo = userInfoString ? JSON.parse(userInfoString) : null
@@ -64,8 +75,8 @@ const ProductDetail = () => {
             <i className='fa fa-angle-right' aria-hidden='true' />
           </div>
           <div className='text-black font-semibold'>
-            <Link to={`/products/${pro?.type}`} className='text-black hover:text-black font-semibold'>
-              {pro?.type}
+            <Link to={`/product/${pro?.type}`} className='text-black hover:text-black font-semibold'>
+              {typeDisplayNames[String(pro?.type)]}
             </Link>
           </div>
           <div className='mx-2 text-[#5d5f6c]'>
@@ -111,15 +122,25 @@ const ProductDetail = () => {
                     </button>
                   </div>
                 </div>
+                <div className='my-5'>
+                  <p>
+                    Số lượng hàng còn trong kho:{' '}
+                    {numeral(pro?.quantity).format('0,0').replace(/,/g, '.').replace(/\./, ',')}
+                  </p>
+                </div>
                 <div className='mt-7'>
-                  <button
-                    className='bg-red-500 h-10 w-44 rounded-sm text-white'
-                    onClick={() => {
-                      addToCart(pro as ProductType)
-                    }}
-                  >
-                    <i className='fa-solid fa-cart-plus'></i> Thêm vào giỏ hàng
-                  </button>
+                  {pro?.quantity === 0 ? (
+                    <p className='text-red-500'>Sản phẩm đã hết hàng</p>
+                  ) : (
+                    <button
+                      className='bg-red-500 h-10 w-44 rounded-sm text-white'
+                      onClick={() => {
+                        addToCart(pro as ProductType)
+                      }}
+                    >
+                      <i className='fa-solid fa-cart-plus'></i> Thêm vào giỏ hàng
+                    </button>
+                  )}
                 </div>
                 <div className='text-[#51545f] my-[20px] w-[460px]'>
                   <div className='mb-[0.9375rem] p-2.5 rounded-[20px] border border-gray-300 w-[400px] text-gray-700'>
@@ -152,7 +173,7 @@ const ProductDetail = () => {
             <div className='py-20'>
               <div className='container mx-auto'>
                 <div className='flex justify-between items-start'>
-                  <div className='w-8/12 p-3 rounded-2xl shadow-md'>
+                  <div className='w-8/12 p-3 rounded-2xl shadow'>
                     <h2 className='text-xl font-bold mb-4'>Đặc điểm nổi bật</h2>
                     <div className='ck-content' dangerouslySetInnerHTML={{ __html: pro?.description as string }}></div>
                   </div>

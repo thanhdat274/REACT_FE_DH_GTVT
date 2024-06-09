@@ -1,51 +1,38 @@
-import { Typography, Col, Row, Button, Form, Input, InputNumber, Select, message, UploadFile } from 'antd'
+import { Typography, Col, Row, Button, Form, Input, InputNumber, Select, message, UploadFile, DatePicker } from 'antd'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { PlusSquareOutlined } from '@ant-design/icons'
-import { UploadProps } from 'antd/es/upload'
-import Dragger from 'antd/es/upload/Dragger'
-import { RcFile } from 'antd/lib/upload'
+
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { upload } from '../../../api/images'
 import { updateUser, listOneUser } from '../../../api/user'
+import { UserType } from '../../../type/user'
 
 const EditUser: React.FC = () => {
+  const { id } = useParams()
   const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>()
-  const [fileList, setfileList] = useState<UploadFile[] | any>([])
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState<UserType>()
   const [form] = Form.useForm()
 
   useEffect(() => {
     const getUser = async (id: number) => {
-      const { data } = await listOneUser(id as number)
-      form.setFieldsValue(data)
+      const { data } = await listOneUser(id)
+      setUsers(data.data)
+      form.setFieldsValue(data?.data)
     }
-    // getUser(id);
-    if (id) {
-      const numericId = parseInt(id, 10) 
-      if (!isNaN(numericId)) {
-        getUser(numericId)
-      } else {
-        console.error('Invalid id')
-      }
-    }
-  }, [id, form])
+    getUser(Number(id))
+  }, [id])
+console.log(users?.password);
 
   const onFinish = async (values: any) => {
-    const file = fileList[0]
-    if (file) {
-      values.image = await upload(file)
-    }
     const valueEdit = {
-      id: id,
-      image: values?.image,
+      id: Number(id),
       name: values?.name,
       email: values?.email,
-      password: values?.password,
+      password: values?.password == null ? users?.password : values?.password,
       phone: values?.phone,
       address: values?.address,
-      role: values?.role
+      birthday: values?.birthday,
+      isEnabled: values?.isEnabled,
+      roleId: values?.roleId
     }
     try {
       await updateUser(valueEdit as any)
@@ -60,23 +47,7 @@ const EditUser: React.FC = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
   }
-  const handleChangeImage: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    setfileList(newFileList)
-  }
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader()
-        reader.readAsDataURL(file.originFileObj as RcFile)
-        reader.onload = () => resolve(reader.result as string)
-      })
-    }
-    const image = new Image()
-    image.src = src
-    const imgWindow = window.open(src)
-    imgWindow?.document.write(image.outerHTML)
-  }
+
   return (
     <div>
       <Breadcrumb>
@@ -87,32 +58,6 @@ const EditUser: React.FC = () => {
 
       <Form form={form} initialValues={users} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete='on'>
         <Row gutter={16}>
-          <Col span={10}>
-            <Form.Item name='image' labelCol={{ span: 24 }} label='Hình ảnh đại diện'>
-              <UploadWrapper>
-                <div style={{ textAlign: 'center', border: '0' }}>
-                  <Dragger
-                    listType='picture'
-                    multiple={false}
-                    maxCount={1}
-                    beforeUpload={() => {
-                      return false
-                    }}
-                    accept='image/png, image/jpg, image/jpeg, image/gif'
-                    onChange={handleChangeImage}
-                    onPreview={onPreview}
-                    fileList={fileList}
-                    style={{ border: '0' }}
-                  >
-                    <p className='ant-upload-drag-icon'>
-                      <PlusSquareOutlined style={{ fontSize: '50px' }} />
-                    </p>
-                    <p>Thêm ảnh!</p>
-                  </Dragger>
-                </div>
-              </UploadWrapper>
-            </Form.Item>
-          </Col>
           <Col span={14}>
             <Typography.Title level={3}>Thông tin tài khoản</Typography.Title>
             <Form.Item
@@ -132,16 +77,11 @@ const EditUser: React.FC = () => {
                   labelCol={{ span: 24 }}
                   rules={[{ required: true, message: 'Email không để trống!' }]}
                 >
-                  <Input style={{ width: '100%' }} size='large' />
+                  <Input style={{ width: '100%' }} size='large' disabled />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item
-                  name='password'
-                  labelCol={{ span: 24 }}
-                  label='Mật khẩu'
-                  rules={[{ required: true, message: 'Mật khẩu không được trống!' }]}
-                >
+                <Form.Item name='password' labelCol={{ span: 24 }} label='Mật khẩu'>
                   <Input type='password' size='large' />
                 </Form.Item>
               </Col>
@@ -149,7 +89,7 @@ const EditUser: React.FC = () => {
               <Col span={12}>
                 <Form.Item
                   label='Chức vụ'
-                  name='role'
+                  name='isEnabled'
                   labelCol={{ span: 24 }}
                   rules={[
                     {
@@ -166,8 +106,33 @@ const EditUser: React.FC = () => {
                     showSearch
                     optionFilterProp='children'
                   >
-                    <Select.Option value={0}>Khách hàng</Select.Option>
-                    <Select.Option value={1}>Nhân viên</Select.Option>
+                    <Select.Option value={1}>Hoạt động</Select.Option>
+                    <Select.Option value={2}>Khóa</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label='Chức vụ'
+                  name='roleId'
+                  labelCol={{ span: 24 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Chức vụ không để trống!'
+                    }
+                  ]}
+                >
+                  <Select
+                    style={{ width: '100%' }}
+                    size='large'
+                    placeholder='Lựa chọn'
+                    allowClear
+                    showSearch
+                    optionFilterProp='children'
+                  >
+                    <Select.Option value={1}>Khách hàng</Select.Option>
+                    <Select.Option value={2}>Nhân viên</Select.Option>
                   </Select>
                 </Form.Item>
               </Col>

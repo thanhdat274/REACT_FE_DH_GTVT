@@ -18,7 +18,7 @@ export const addUser = (use: UserType) => {
     return instance.post(url, use);
 }
 export const updateUser = (use: UserType) => {
-    const url = `/users/${use.id}`
+    const url = `/users/update`
     return instance.put(url, use);
 }
 

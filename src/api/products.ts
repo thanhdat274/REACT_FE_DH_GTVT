@@ -6,6 +6,10 @@ export const getAll = () => {
     const url = "/products"
     return instance.get(url)
 }
+export const getAllProByType = (type: String) => {
+    const url = `/products/list-product-by-type/${type}`
+    return instance.get(url)
+}
 export const listOnePro = (id: number) => {
     const url = `/products/detail/${id}`
     return instance.get(url);

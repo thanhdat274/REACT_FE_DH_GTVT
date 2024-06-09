@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const Header = () => {
-  const [auth, setAuth] = useState<any>()
+  const [auth, setAuth] = useState('')
   const user = JSON.parse(localStorage.getItem('userInfo') as string)
   useEffect(() => {
-    setAuth(user)
-  }, [])
+    if (user) {
+      setAuth(user)
+    } else {
+      setAuth('')
+    }
+    console.log(user)
+  }, [JSON.stringify(user)])
   return (
     <div className='header-top'>
       <div className='header-container'>
@@ -76,7 +81,7 @@ const Header = () => {
               </p>
             </div>
           </Link>
-          {auth && auth ? (
+          {auth !== '' ? (
             <Link to='/thong-tin' className='header-item'>
               <div className='about__box-icon'>
                 <i className='fa-solid fa-circle-user' style={{ textAlign: 'center' }} />

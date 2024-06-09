@@ -1,5 +1,6 @@
 import { listOneOrder } from '@/api/orders'
 import { OrderTypeData } from '@/type/OrderType'
+import { Button } from 'antd'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -12,7 +13,6 @@ const OrderDetail = () => {
     const fetchOrder = async (id: number) => {
       try {
         const { data } = await listOneOrder(id)
-
         setOrder(data.data)
       } catch (error) {
         console.error('Error fetching order:', error)
@@ -35,11 +35,11 @@ const OrderDetail = () => {
           </p>
           <p>
             <span className='font-semibold'>Ngày đặt hàng:</span>{' '}
-            {moment(order?.orderDate).format('DD/MM/YYYY HH:mm:ss')}
+            {moment(String(order?.orderDate)).format('DD/MM/YYYY HH:mm:ss')}
           </p>
           <p>
             <span className='font-semibold'>Ngày giao hàng dự kiến:</span>
-            {moment(order?.deliveryDate).format('DD/MM/YYYY HH:mm:ss')}
+            {moment(String(order?.deliveryDate)).format('DD/MM/YYYY HH:mm:ss')}
           </p>
           <p>
             <span className='font-semibold'>Tên người nhận hàng:</span> {order?.name}
@@ -97,6 +97,12 @@ const OrderDetail = () => {
           </table>
         </div>
       </div>
+
+      <Link to='/admin/orders'>
+        <Button type='primary' htmlType='submit' style={{ marginRight: '20px' }}>
+          Back
+        </Button>
+      </Link>
     </div>
   )
 }

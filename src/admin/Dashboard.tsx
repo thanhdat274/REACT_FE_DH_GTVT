@@ -10,6 +10,7 @@ const Dashboard = () => {
           Dashboard
         </Typography.Title>
       </Breadcrumb>
+      <h1>Tính năng chưa có thời gian phát triển</h1>
     </>
   )
 }

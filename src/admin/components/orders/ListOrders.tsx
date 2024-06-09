@@ -20,7 +20,12 @@ const ListOrders = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedOrder, setSelectedOrder] = useState<OrderType | null>(null)
   const [newStatus, setNewStatus] = useState('')
-
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(5)
+  const handlePageChange = (page: number, pageSize?: number) => {
+    setCurrentPage(page)
+    setPageSize(pageSize || 5)
+  }
   const fetchData = async () => {
     try {
       const { data } = await getAll()
@@ -95,7 +100,9 @@ const ListOrders = () => {
       deliveryDate: item.deliveryDate,
       notes: item.notes
     }))
-
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = Math.min(startIndex + pageSize, data?.length)
+  const currentData = data?.slice(startIndex, endIndex)
   const columns: ColumnsType<OrderType> = [
     { title: 'ID', dataIndex: 'key', key: 'id' },
     { title: 'Mã đơn hàng', dataIndex: 'orderCode', key: 'orderCode' },
@@ -131,7 +138,7 @@ const ListOrders = () => {
       title: 'Action',
       key: 'action',
       render: (record: OrderType) => {
-        if (record.orderStatus === 'Hủy đơn hàng') {
+        if (record.orderStatus === 'Hủy đơn hàng' || record.orderStatus === 'Đã nhận hàng') {
           return (
             <Space size='middle' className='flex items-center justify-center space-x-4'>
               <Link to={`detail/${record.id}`} className='inline-block'>
@@ -161,13 +168,16 @@ const ListOrders = () => {
         <Typography.Title level={2} style={{ margin: 0 }}>
           Danh sách đơn đặt hàng
         </Typography.Title>
-        <Link to='/admin/products/add'>
-          <Button type='dashed' shape='circle' icon={<PlusOutlined />} />
-        </Link>
       </Breadcrumb>
       <div className='my-3'>
         <Search placeholder='Tìm theo sđt đặt hàng' onSearch={handleSearch} style={{ width: 200, marginRight: 16 }} />
-        <Select placeholder='Lọc theo trạng thái' style={{ width: 200 }} onChange={handleStatusFilterChange}>
+        <Select
+          placeholder='Lọc theo trạng thái'
+          style={{ width: 200 }}
+          onChange={handleStatusFilterChange}
+          defaultValue=''
+        >
+          <Option value=''>Tất cả</Option>
           <Option value='Đặt hàng thành công'>Đặt hàng thành công</Option>
           <Option value='Đang chuẩn bị hàng'>Đang chuẩn bị hàng</Option>
           <Option value='Đang giao hàng'>Đang giao hàng</Option>
@@ -176,12 +186,23 @@ const ListOrders = () => {
           <Option value='Hủy đơn hàng'>Hủy đơn hàng</Option>
         </Select>
       </div>
-      <Table columns={columns} dataSource={data} />
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={{
+          total: data.length,
+          current: currentPage,
+          pageSize: pageSize,
+          onChange: handlePageChange,
+          showSizeChanger: true,
+          pageSizeOptions: ['5', '10', '20']
+        }}
+      />
 
       <Modal title='Cập nhật trạng thái đơn hàng' visible={modalVisible} onOk={handleOk} onCancel={handleCancel}>
         {/* Display order details */}
         <p>Mã đơn hàng: {selectedOrder?.orderCode}</p>
-        <p>Ngày đặt hàng: {moment(selectedOrder?.orderDate).format('DD/MM/YYYY HH:mm:ss')}</p>
+        <p>Ngày đặt hàng: {moment(String(selectedOrder?.orderDate)).format('DD/MM/YYYY HH:mm:ss')}</p>
         <p>Tổng tiền: {numeral(selectedOrder?.totalAmount).format('0,0').replace(/,/g, '.')} đ</p>
         <p>Tên người đặt hàng: {selectedOrder?.name}</p>
         <p>Số điện thoại: {selectedOrder?.phone}</p>
