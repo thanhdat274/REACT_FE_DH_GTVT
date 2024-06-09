@@ -12,11 +12,11 @@ const MenuAdmin: React.FC = () => (
         Quay lại trang chủ
       </NavLink>
     </Menu.Item>
-    <Menu.Item key='sub1' icon={<AppstoreOutlined />} title='Dashboard'>
+    {/* <Menu.Item key='sub1' icon={<AppstoreOutlined />} title='Dashboard'>
       <NavLink className='nav-link active' aria-current='page' to='/admin'>
         Dashboard
       </NavLink>
-    </Menu.Item>
+    </Menu.Item> */}
     <SubMenu key='sub3' icon={<AppstoreOutlined />} title='Quản lí sản phẩm'>
       <Menu.Item key='4'>
         <NavLink className='' aria-current='page' to='/admin/products'>

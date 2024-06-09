@@ -10,7 +10,6 @@ const { Header } = Layout
 const HeaderAdmin: React.FC = () => (
   <HeaderCustom>
     <Logo src={LogoImage} />
-    <WrapperInput formAction='/tim-kiem' size='large' placeholder='Enter keyword..' prefix={<SearchOutlined />} />
   </HeaderCustom>
 )
 

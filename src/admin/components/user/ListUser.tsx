@@ -1,11 +1,11 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Image, message, Modal, Space, Table, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { deleteUser, listUser } from '../../../api/user'
-import { UserType } from '../../../type/user';
+import { UserType } from '../../../type/user'
 
 const ListUser = () => {
   const [user, setUser] = useState<UserType[]>([])
@@ -32,9 +32,9 @@ const ListUser = () => {
       isEnabled: item.isEnabled
     }
   })
-    const startIndex = (currentPage - 1) * pageSize
-    const endIndex = Math.min(startIndex + pageSize, data?.length)
-    const currentData = data?.slice(startIndex, endIndex)
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = Math.min(startIndex + pageSize, data?.length)
+  const currentData = data?.slice(startIndex, endIndex)
 
   const columns: ColumnsType<UserType> = [
     {

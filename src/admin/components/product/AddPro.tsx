@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Typography, Col, Row, Button, Form, Input, InputNumber, Select, message, UploadFile } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import { PlusSquareOutlined } from '@ant-design/icons'

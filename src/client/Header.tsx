@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const Header = () => {
@@ -26,12 +26,12 @@ const Header = () => {
             </div>
           </Link>
           <div className='box-search'>
-            <form method='get'>
+            {/* <form method='get'>
               <input type='text' className='search' autoComplete='off' placeholder='Tìm kiếm sản phẩm ...' />
               <button type='submit' className='btn-search'>
                 <i className='fa-solid fa-magnifying-glass' />
               </button>
-            </form>
+            </form> */}
           </div>
           <Link to='/' className='header-item'>
             <div className='about__box-icon'>

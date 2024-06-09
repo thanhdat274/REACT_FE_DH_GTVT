@@ -1,7 +1,7 @@
 import { Typography, Col, Row, Button, Form, Input, InputNumber, Select, message, UploadFile, DatePicker } from 'antd'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { updateUser, listOneUser } from '../../../api/user'
 import { UserType } from '../../../type/user'
@@ -20,7 +20,7 @@ const EditUser: React.FC = () => {
     }
     getUser(Number(id))
   }, [id])
-console.log(users?.password);
+  console.log(users?.password)
 
   const onFinish = async (values: any) => {
     const valueEdit = {

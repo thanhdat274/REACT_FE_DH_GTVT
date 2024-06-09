@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import AdminLayout from './admin/AdminLayout'
-import Dashboard from './admin/Dashboard'
+// import Dashboard from './admin/Dashboard'
 import './index.css'
 import Signin from './client/components/auth/signin'
 import Home from './client/components/Home'
@@ -55,7 +55,7 @@ function App() {
             </PrivateRouter>
           }
         >
-          <Route index element={<Dashboard />} />
+          {/* <Route index element={<Dashboard />} /> */}
           {/* phần sản phẩm */}
           <Route path='products'>
             <Route index element={<ListPro />} />

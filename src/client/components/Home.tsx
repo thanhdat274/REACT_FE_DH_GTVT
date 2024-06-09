@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getAll } from '../../api/products'
 import { ProductType } from '../../type/Product'
@@ -188,7 +188,7 @@ const Home = () => {
               </Link>
             </div>
             <div className='product-list'>
-              {filteredProducts[type]?.slice(0, 10).map((item, index) => {
+              {filteredProducts[type]?.slice(0, 5).map((item, index) => {
                 return (
                   <div key={index} className='product'>
                     <Link to={`/products/${item?.id}`} className='product'>
@@ -260,34 +260,34 @@ const Home = () => {
           <div className='brand-banner__content'>
             <a href='/' className='brand-banner__item'>
               <img
-                alt='Ưu đãi Evo'
-                data-src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1660664074/citi-bank-mo-the_sz4x6c.png'
+                alt=''
+                data-src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940011/uu-dai-vppay-apple-080324_2_flkv9c.webp'
                 className='brand-banner__img'
-                src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1660664074/citi-bank-mo-the_sz4x6c.png'
+                src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940011/uu-dai-vppay-apple-080324_2_flkv9c.webp'
               />
             </a>
             <a href='/' className='brand-banner__item'>
               <img
-                alt='Ưu đãi VNPay'
-                data-src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/VNPAY.png'
+                alt=''
+                data-src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940012/vib-update-01-04-2024_2_f3m4vw.webp'
                 className='brand-banner__img'
-                src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/VNPAY.png'
+                src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940012/vib-update-01-04-2024_2_f3m4vw.webp'
               />
             </a>
             <a href='/' className='brand-banner__item'>
               <img
-                alt='Ưu đãi Kredivo'
-                data-src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/uu-dai-thanh-toan-kredivo.png'
+                alt=''
+                data-src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940011/uu-dai-thanh-toan-hsbc-0803-2024_j4w1an.webp'
                 className='brand-banner__img'
-                src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/uu-dai-thanh-toan-kredivo.png'
+                src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940011/uu-dai-thanh-toan-hsbc-0803-2024_j4w1an.webp'
               />
             </a>
             <a href='/' className='brand-banner__item'>
               <img
-                alt='Ưu đãi đối tác Sacombank'
-                data-src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/uu-dai-thanh-toan-sacom0991764.png'
+                alt=''
+                data-src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940010/momo-5-04-2024-slide_aopkxs.webp'
                 className='brand-banner__img'
-                src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/uu-dai-thanh-toan-sacom0991764.png'
+                src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940010/momo-5-04-2024-slide_aopkxs.webp'
               />
             </a>
           </div>
@@ -301,34 +301,34 @@ const Home = () => {
           <div className='brand-banner__content'>
             <a href='/' className='brand-banner__item'>
               <img
-                alt='Samsung'
-                data-src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/samsung.png'
+                alt=''
+                data-src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940011/apple-chinh-hang-home_tb7oe9.webp'
                 className='brand-banner__img'
-                src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/samsung.png'
+                src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940011/apple-chinh-hang-home_tb7oe9.webp'
               />
             </a>
             <a href='/' className='brand-banner__item'>
               <img
-                alt='Sis Apple'
-                data-src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/apple.png'
+                alt=''
+                data-src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940011/SIS_asus_ihdv47.webp'
                 className='brand-banner__img'
-                src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/apple.png'
+                src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940011/SIS_asus_ihdv47.webp'
               />
             </a>
             <a href='/' className='brand-banner__item'>
               <img
-                alt='Asus'
-                data-src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/SIS asus.png'
+                alt=''
+                data-src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940010/gian-hang-samsung-home_kai5jd.webp'
                 className='brand-banner__img'
-                src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/SIS asus.png'
+                src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940010/gian-hang-samsung-home_kai5jd.webp'
               />
             </a>
             <a href='/' className='brand-banner__item'>
               <img
                 alt='Xiaomi'
-                data-src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/xiaomi.png'
+                data-src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940011/xiaomi_alhqoi.webp'
                 className='brand-banner__img'
-                src='https://cdn2.cellphones.com.vn/x/https://dashboard.cellphones.com.vn/storage/xiaomi.png'
+                src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1717940011/xiaomi_alhqoi.webp'
               />
             </a>
           </div>
