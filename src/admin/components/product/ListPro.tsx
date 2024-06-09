@@ -151,14 +151,14 @@ const ListPro = () => {
               <EditOutlined />
             </button>
           </Link>
-          <button style={{ border: '0px', fontSize: '20px' }}>
+          {/* <button style={{ border: '0px', fontSize: '20px' }}>
             <DeleteOutlined
               style={{ color: 'red' }}
               onClick={() => {
                 onDelete(record.id as number)
               }}
             />
-          </button>
+          </button> */}
         </Space>
       )
     }
