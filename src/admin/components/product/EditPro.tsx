@@ -501,7 +501,7 @@ const EditPro: React.FC = () => {
                 </Button>
               </Link>
               <Button type='primary' htmlType='submit'>
-                Thêm mới
+                Cập nhật
               </Button>
             </Form.Item>
           </Col>
