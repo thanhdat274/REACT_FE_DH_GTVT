@@ -119,7 +119,7 @@ const ListPro = () => {
       dataIndex: 'thumbnail',
       key: 'thumbnail',
       render: (text: string, record: ProductType) => {
-        return <Image width={200} src={text} />
+        return <Image width={200} src={`http://localhost:9040/datn-dhgtvt/${text}`} />
       }
     },
     {

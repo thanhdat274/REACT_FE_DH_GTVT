@@ -92,9 +92,27 @@ const AddPro: React.FC = () => {
   }
   //---------------------------------------
 
+
+  const getBase64 = (file: RcFile): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = (error) => reject(error)
+    })
+
   const onFinish = async (values: any) => {
-    const imgLink = await upload(fileList[0])
-    const mutiImgLink = await upload(mutiFileList[0])
+      if (!fileList.length || !mutiFileList.length) {
+        message.error('Vui lòng chọn hình ảnh!')
+        return
+      }
+    // const imgLink = await upload(fileList[0])
+    // const mutiImgLink = await upload(mutiFileList[0])
+     const thumbFile = fileList[0].originFileObj as RcFile
+     const mutiFile = mutiFileList[0].originFileObj as RcFile
+
+     const thumbBase64 = await getBase64(thumbFile)
+     const mutiBase64 = await getBase64(mutiFile)
     const valueAdd = {
       name: values?.name,
       type: values?.type,
@@ -107,8 +125,8 @@ const AddPro: React.FC = () => {
       screenReslution: values?.screenReslution,
       screenSize: values?.screenSize,
       storage: values?.storage,
-      image: mutiImgLink,
-      thumbnail: imgLink,
+      image: mutiBase64,
+      thumbnail: thumbBase64,
       weight: values?.weight,
       price: values?.price,
       salePrice: values?.salePrice,

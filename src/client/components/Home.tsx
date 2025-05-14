@@ -104,7 +104,7 @@ const Home = () => {
         <div className='banner'>
           <div className='banner-content'>
             <img
-              src='https://res.cloudinary.com/dvj4wwihv/image/upload/v1716451572/iphone-15-pro-upgrader-stogage_pdzqmt.webp'
+              src='http://localhost:9040/datn-dhgtvt/image/photo_2024-12-08_22-24-36.jpg'
               alt=''
               className='banner-img'
             />
